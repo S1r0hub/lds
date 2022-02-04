@@ -25,7 +25,7 @@ public class LDSD_cw extends LDSD{
     public double compare(R a, R b) {
         try{
             edges = LDSDLDLoader.getEdges(a, b);
-            System.out.println("[TMP] Edges total: " + edges.size());
+            //System.out.println("[TMP] Edges total: " + edges.size());
             if(edges == null) { return 0; }
             return LDSD_cw_sim(a, b);
         }
