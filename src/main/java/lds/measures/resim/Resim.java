@@ -17,7 +17,7 @@ import org.openrdf.model.URI;
   public class Resim extends ResourceSimilarity {  
 
 	public Resim(Config config) throws Exception {
-            super(config);               
+            super(config);
 	}
 
 

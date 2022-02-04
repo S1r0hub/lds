@@ -92,7 +92,6 @@ public class SimPLdManager extends HybridMeasuresLdManager {
 
        return super.getIngoingFeatureFrequency(property);
     }
-    
 
     @Override
     public int getOutgoingFeatureFrequency(String property) {
@@ -101,5 +100,5 @@ public class SimPLdManager extends HybridMeasuresLdManager {
        }
 
        return super.getOutgoingFeatureFrequency(property);
-    }    
+    }
 }

@@ -13,6 +13,7 @@ import java.util.List;
  * @author Fouad Komeiha
  */
 public class Feature {
+
     private String link , vertex, direction;
 
     public Feature(String link, String vertex, String direction){
@@ -23,12 +24,11 @@ public class Feature {
     }
 
     public Feature(String feature){
-        new Feature(this.getLink(feature) , this.getVertex(feature) , this.getDirection(feature) );
+        new Feature(getLink(feature), getVertex(feature), getDirection(feature));
     }
 
     public String getLink(){
         return this.link;
-
     }
 
     public String getVertex(){
@@ -101,6 +101,5 @@ public class Feature {
 
         return false;
     }
-        
-        
-    }
+
+}

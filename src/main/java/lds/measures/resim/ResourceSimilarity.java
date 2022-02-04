@@ -52,8 +52,8 @@ public abstract class ResourceSimilarity implements LdSimilarity {
                 this.SpecificResimLdLoader = new ResimLdManager((LdDataset) config.getParam(ConfigParam.LdDatasetSpecific) , (Boolean) config.getParam(ConfigParam.useIndexes) );
                 this.weight = new Weight((WeightMethod)config.getParam(ConfigParam.WeightMethod) , resimLDLoader , SpecificResimLdLoader , (Boolean)config.getParam(ConfigParam.useIndexes));
                 this.useIndeses = (Boolean) config.getParam(ConfigParam.useIndexes);
-                break;            
-        }            
+                break;
+        }
     }
     
     
@@ -70,12 +70,11 @@ public abstract class ResourceSimilarity implements LdSimilarity {
         
         //close prefixes and namespaces index
         Ontology.closeIndexes();
-        
-        
     }
     
     @Override
     public void loadIndexes() throws Exception{
+
         if(useIndeses){
             resimLDLoader.loadIndexes();
             
@@ -94,13 +93,10 @@ public abstract class ResourceSimilarity implements LdSimilarity {
                
         double sim = 0;
         try {
-
-                sim = Resim(a, b);
-
-
+            sim = Resim(a, b);
         } catch (Exception ex) {
-                Logger.getLogger(Resim.class.getName()).log(Level.SEVERE, null, ex);
-                return -1;
+            Logger.getLogger(Resim.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
         }
         
         return sim;
@@ -111,92 +107,67 @@ public abstract class ResourceSimilarity implements LdSimilarity {
         
         double sim = 0;
         try {
-                sim = Resim(a, b , w1 , w2);
-
-
+            sim = Resim(a, b , w1 , w2);
         } catch (Exception ex) {
-                Logger.getLogger(Resim.class.getName()).log(Level.SEVERE, null, ex);
-                return -1;
+            Logger.getLogger(Resim.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
         }
         
         return sim;
     }
 
+    /**
+     * Retrieve resource similarity of a and b, using weights w1 and w2.
+     * @param a first resource
+     * @param b second resource
+     * @param w1 first weight for property similarity
+     * @param w2 second weight for LDSD similarity
+     * @return Average of the weighted sum of property similarity and LDSD similarity
+     */
+    public double Resim(R a, R b, int w1, int w2) {
+
+        // FIX by S1r0hub: if resources are the same, similarity is 1, no matter how many edges there are.
+        // Placing this statement here can potentially save us some requests.
+        if (a.equals(b) || resimLDLoader.isSameAs(a, b)) { return 1; }
+
+        this.edges = resimLDLoader.getEdges(a, b);
+        if(edges == null) { return 0; }
+
+        System.out.println("Get similarity of a=" + a.toString() + " and b=" + b.toString());
+        double x = w1 * PropertySim(a, b);
+        double y = w2 * LDSDsim(a, b);
+        return (x + y) / (w1 + w2);
+    } 
 
     public double Resim(R a, R b) {
+        // FIX by S1r0hub: we only need one constructor and this one calls the other (easier to maintain)
+        return Resim(a, b, 1, 1);
+    }
 
-            int w1 = 1, w2 = 1;
-            double x = 0, y = 0;
-
-            this.edges = resimLDLoader.getEdges(a , b);
-            
-            if(edges == null)
-                return 0;
-            // TODO: if we're in the same dataset, it's not necessary to check sameAs ?
-            if (a.equals(b) || resimLDLoader.isSameAs(a, b))
-                    return 1;
-
-            x = w1 * PropertySim(a, b);
-            y = w2 * LDSDsim(a, b);
-            return (x + y) / (w1 + w2);
-
-    } 
-    
-    public double Resim(R a, R b , int w1 , int w2) {
-
-            double x = 0, y = 0;
-
-            this.edges = resimLDLoader.getEdges(a , b);
-            // TODO: if we're in the same dataset, it's not necessary to check sameAs ?
-            if (a.equals(b) || resimLDLoader.isSameAs(a, b))
-                    return 1;
-
-            x = w1 * PropertySim(a, b);
-            y = w2 * LDSDsim(a, b);
-            return (x + y) / (w1 + w2);
-
-    } 
 
     public abstract double LDSD(R a , R b);
 
-    
+
     public double LDSDsim(R a, R b) {
-            return 1 - LDSD(a, b);
+        return 1 - LDSD(a, b);
     }
 
     public double PropertySim(R a, R b) {
-            double x = 0, y = 0, cip = 0 , cop = 0 ,ip = 0, op = 0, ppty = 0;
 
-            for (URI e : edges) {
-                    int cd = Cd(e);
-                    x = x + ((double) Csip(e, a, b) / cd);
-                    y = y + ((double) Csop(e, a, b) / cd);
-            }
-            
-            if (x !=0)
-                cip = Cip(a) + Cip(b);
-            else 
-                ip = 0;
-            
-            if(y != 0)
-                 cop = Cop(a) + Cop(b);
-            else
-                op = 0;
-            
-            if(cip != 0)
-                    ip = x / cip;
-            else
-                ip = 0;
-            
-            if(cop != 0 )
-                op = y / cop;
-            
-            else
-                op = 0;
+        double x = 0, y = 0;
 
-            ppty = ip + op;
-
-            return ppty;
+        for (URI e : edges) {
+            int cd = Cd(e);
+            x = x + ((double) Csip(e, a, b) / cd);
+            y = y + ((double) Csop(e, a, b) / cd);
+        }
+        
+        double cip = 0, cop = 0, ip = 0, op = 0;
+        if (x !=0 ) { cip = Cip(a) + Cip(b); }
+        if (y != 0) { cop = Cop(a) + Cop(b); }
+        if (cip != 0) { ip = x / cip; }
+        if (cop != 0) { op = y / cop; }
+        return ip + op;
     }
 
     public int Cip(R a) {

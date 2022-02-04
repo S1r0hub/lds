@@ -23,15 +23,15 @@ public class LDSDTest {
     public static final String datasetDir = System.getProperty("user.dir") + "/src/test/resources/specific_class_set.rdf"; 
     
     @Test
-    public void LDSDTest() throws Exception{  
+    public void BasicLDSDTest() throws Exception{  
         
-        LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
+        LdDataset dataset = LdDatasetCreator.getDBpediaDataset(); // FIX: this is not used!
         LdDataset dataSetSpecific = LdDatasetCreator.getLocalDataset(datasetDir, "LDSD_example");              
         
         R r1 = new R("http://dbpedia.org/resource/The_Noah");
         R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");
         
-        //Initialzie the engine class object
+        //Initialize the engine class object
         LdSimilarityEngine engine = new LdSimilarityEngine();
         
         /*Intiialize the conf object which contains the necessary parameters for the measure
@@ -71,32 +71,29 @@ public class LDSDTest {
         System.out.println( engine.similarity(r1 , r2) );
         engine.close();
         
-        config = LdConfigFactory.createDefaultConf(Measure.WLDSD_cw);       
+        config = LdConfigFactory.createDefaultConf(Measure.WLDSD_cw);
         
         /*Note:
-        Using the default conf for measures that use weighting algorithims such as : WLDSD_cw, WTLDSD_cw 
+        Using the default conf for measures that use weighting algorithms such as : WLDSD_cw, WTLDSD_cw 
         requires adding the specific dataset object which is used for weight calculation.
         To add the specific dataset use the following:
         */ 
-        config.addParam(ConfigParam.LdDatasetSpecific , dataSetSpecific);        
+        config.addParam(ConfigParam.LdDatasetSpecific , dataSetSpecific);
         
         /*Note:
-        Using the default conf for measures that use weighting algorithims such as : WLDSD_cw, WTLDSD_cw  uses ITW algorithim by default.
-        To change the weighting algorithim use the following:
+        Using the default conf for measures that use weighting algorithms such as : WLDSD_cw, WTLDSD_cw uses ITW algorithm by default.
+        To change the weighting algorithm use the following:
         
-        config.addParam("WeightMethod" , WeightMethod.RSLAW);        
+        config.addParam("WeightMethod" , WeightMethod.RSLAW);
         */ 
         
         engine.load(Measure.WLDSD_cw , config);
-        System.out.println( engine.similarity(r1 , r2) );
+        System.out.println( engine.similarity(r1 , r2) ); // FIX: results in NaN!
         engine.close();
         
-
         engine.load(Measure.WTLDSD_cw , config);
         System.out.println( engine.similarity(r1, r2) );
         engine.close();
-
-        
     }
-    
+
 }

@@ -22,11 +22,11 @@ import ldq.LdDataset;
 
 
 public class LdBenchmark {
+
     private BenchmarkFile sourceFile;
     private BenchmarkFile resultsFile;
     private Correlation correlation;
-    
-    
+
     public LdBenchmark(BenchmarkFile sourceFile , Correlation correlation){
         this.sourceFile = sourceFile;
         this.resultsFile = getResultFilePath();
@@ -126,10 +126,12 @@ public class LdBenchmark {
                 
         BufferedReader reader = Files.newBufferedReader(Paths.get(filePath));
 
-        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withDelimiter(file.getSeparator())
-                                                       .withQuote(file.getQuote())
-                                                       .withRecordSeparator("\r\n")
-                                                       .parse(reader);
+        CSVFormat csv = getDefaultCSVFormat(file);
+        Iterable<CSVRecord> records = csv.parse(reader);
+//        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withDelimiter(file.getSeparator())
+//                                                       .withQuote(file.getQuote())
+//                                                       .withRecordSeparator("\r\n")
+//                                                       .parse(reader);
         String c3 , result;
         int i = 0;
         for (CSVRecord record : records) {
@@ -177,10 +179,12 @@ public class LdBenchmark {
                         
         BufferedReader reader = Files.newBufferedReader(Paths.get(filePath));
 
-        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withDelimiter(file.getSeparator())
-                                                       .withQuote(file.getQuote())
-                                                       .withRecordSeparator("\r\n")
-                                                       .parse(reader);
+        CSVFormat csv = getDefaultCSVFormat(file);
+        Iterable<CSVRecord> records = csv.parse(reader);
+//        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withDelimiter(file.getSeparator())
+//                                                       .withQuote(file.getQuote())
+//                                                       .withRecordSeparator("\r\n")
+//                                                       .parse(reader);
         String c3;
         int i = 0;
         for (CSVRecord record : records) {
@@ -198,7 +202,7 @@ public class LdBenchmark {
     }
     
     
-    private List<LdResourceTriple> readRowsFromBenchmarks(BenchmarkFile file) throws FileNotFoundException, IOException{
+	private List<LdResourceTriple> readRowsFromBenchmarks(BenchmarkFile file) throws FileNotFoundException, IOException{
         
         /*String baseURI = "http://dbpedia.org/resource/"; //TODO: fix base URI to be as a parameter or dynamic
         List<LdResourceTriple> listTriples = new ArrayList<>();
@@ -236,10 +240,12 @@ public class LdBenchmark {
         
         BufferedReader reader = Files.newBufferedReader(Paths.get(filePath));
 
-        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withDelimiter(file.getSeparator())
-                                                       .withQuote(file.getQuote())
-                                                       .withRecordSeparator("\r\n")
-                                                       .parse(reader);
+        CSVFormat csv = getDefaultCSVFormat(file);
+        Iterable<CSVRecord> records = csv.parse(reader);
+//        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withDelimiter(file.getSeparator()) // replaced by above code
+//                                                       .withQuote(file.getQuote())
+//                                                       .withRecordSeparator("\r\n")
+//                                                       .parse(reader);
 
         R firstResource = null, secondResource = null;
         double result = -1;
@@ -457,18 +463,18 @@ public class LdBenchmark {
     }
     
     private int getColumnCountFromFile(BenchmarkFile sourceFile) throws IOException{
-         String filePath = sourceFile.getFilePath();
+
+        String filePath = sourceFile.getFilePath();
         BufferedReader reader = Files.newBufferedReader(Paths.get(filePath));
 
-        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withDelimiter(sourceFile.getSeparator())
-                                                       .withQuote(sourceFile.getQuote())
-                                                       .withRecordSeparator("\r\n")
-                                                       .parse(reader);        
+        CSVFormat csv = getDefaultCSVFormat(sourceFile);
+        Iterable<CSVRecord> records = csv.parse(reader);
+//        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withDelimiter(sourceFile.getSeparator())
+//                                                       .withQuote(sourceFile.getQuote())
+//                                                       .withRecordSeparator("\r\n")
+//                                                       .parse(reader);        
         CSVRecord record = records.iterator().next();
-            return record.size();
-                
-       
-        
+        return record.size();
     }
     
     
@@ -495,10 +501,12 @@ public class LdBenchmark {
        
         BufferedReader reader = Files.newBufferedReader(Paths.get(filePath));
 
-        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withDelimiter(sourceFile.getSeparator())
-                                                       .withQuote(sourceFile.getQuote())
-                                                       .withRecordSeparator("\r\n")
-                                                       .parse(reader);
+        CSVFormat csv = getDefaultCSVFormat(sourceFile);
+        Iterable<CSVRecord> records = csv.parse(reader);
+//        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withDelimiter(sourceFile.getSeparator())
+//                                                       .withQuote(sourceFile.getQuote())
+//                                                       .withRecordSeparator("\r\n")
+//                                                       .parse(reader);
         
         for (CSVRecord record : records) {
             resourceList.add(record.get(0).substring(0, 1).toUpperCase() + record.get(0).substring(1));
@@ -516,10 +524,12 @@ public class LdBenchmark {
         
         BufferedReader reader = Files.newBufferedReader(Paths.get(filePath));
 
-        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withDelimiter(sourceFile.getSeparator())
-                                                       .withQuote(sourceFile.getQuote())
-                                                       .withRecordSeparator("\r\n")
-                                                       .parse(reader);
+        CSVFormat csv = getDefaultCSVFormat(sourceFile);
+        Iterable<CSVRecord> records = csv.parse(reader);
+//        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withDelimiter(sourceFile.getSeparator())
+//                                                       .withQuote(sourceFile.getQuote())
+//                                                       .withRecordSeparator("\r\n")
+//                                                       .parse(reader);
 
         R firstResource = null, secondResource = null;
         double result = -1;
@@ -635,5 +645,25 @@ public class LdBenchmark {
         writeListToFile(unmapped);
         
     }
-        
+
+    /**
+     * Creates an instance of {@link CSVFormat} to parse csv files.
+     * @param file the benchmark file
+     * @param recordSep record separator
+     */
+    private CSVFormat getDefaultCSVFormat(BenchmarkFile file, String recordSep) {
+    	return CSVFormat.DEFAULT.builder()
+    		.setDelimiter(file.getSeparator())
+    		.setQuote(file.getQuote())
+    		.setRecordSeparator("\r\n")
+    		.build();
+    }
+    
+    /**
+     * Same as {@link #getDefaultCSVFormat(BenchmarkFile, String)}
+     * but with default record separator set to "<code>\r\n</code>".
+     */
+    private CSVFormat getDefaultCSVFormat(BenchmarkFile file) {
+    	return getDefaultCSVFormat(file, "\r\n");
+    }
 }

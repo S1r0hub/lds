@@ -23,7 +23,7 @@ public class YagoLdManager extends DBpediaOntologiesLdManager {
     private LdIndex categoriesIndex;
     private LdIndexerManager manager;
     private LdDataset dataSetInitial;
-    private LdDataset datasetMain;
+    private LdDataset datasetMain; // FIX: what should this do?
     
     public YagoLdManager(LdDataset dataSetInitial , boolean useIndex) throws Exception {
         super(dataSetInitial);
@@ -79,6 +79,5 @@ public class YagoLdManager extends DBpediaOntologiesLdManager {
         
         return super.getCategories(a );
     }
-    
-    
+
 }

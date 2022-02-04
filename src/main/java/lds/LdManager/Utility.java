@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 import lds.LdManager.ontologies.Ontology;
 import lds.resource.R;
-import org.apache.jena.rdf.model.Resource;
 import org.openrdf.model.URI;
 import slib.graph.model.impl.repo.URIFactoryMemory;
 import slib.graph.model.repo.URIFactory;
@@ -23,17 +22,16 @@ import slib.graph.model.repo.URIFactory;
 public class Utility {
     
     public static Set<URI> toURI(List<String> list){
-    Set<URI> listURI = new HashSet();
-    URIFactory factory = URIFactoryMemory.getSingleton();
-    if(list != null  && !list.contains("-1")){
-        for(String value:list){
-            listURI.add(factory.getURI(value));
-        }
-
-        return listURI;
-    }
-    return null;
-
+	    Set<URI> listURI = new HashSet<>();
+	    URIFactory factory = URIFactoryMemory.getSingleton();
+	    if(list != null  && !list.contains("-1")){
+	        for(String value:list){
+	            listURI.add(factory.getURI(value));
+	        }
+	
+	        return listURI;
+	    }
+	    return null;
     }
 
     public static List<String> toList(Set<URI> list){
@@ -45,9 +43,9 @@ public class Utility {
 
             return listString;
         }
-        return null;            
+        return null;
     }
-        
+
     public static String createKey(Object ...args){
         String key = "";
         for (int i = 0; i < args.length; i++) {
@@ -61,6 +59,6 @@ public class Utility {
         }
         
         return key;
-    }    
-        
+    }
+
 }

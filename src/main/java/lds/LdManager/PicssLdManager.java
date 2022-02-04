@@ -56,14 +56,11 @@ public class PicssLdManager extends HybridMeasuresLdManager {
     public void closeIndexes(){
         super.closeIndexes();
         if (useIndex) {
-            
 //            manager.closeIndex(ingoingFeaturesIndex);
             manager.closeIndex(outgoingFeaturesIndex);
             manager.closeIndex(countIngoingFeaturesIndex);
             manager.closeIndex(countOutgoingFeaturesIndex);            
-            
         }
-        
     }
     
     public List<String> getFeatures(R a){

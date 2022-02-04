@@ -10,7 +10,6 @@ import java.util.List;
 import lds.LdManager.ontologies.Ontology;
 import lds.config.Config;
 import lds.config.ConfigParam;
-import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.openrdf.model.URI;
 
@@ -182,10 +181,4 @@ public class WTResim extends ResourceSimilarity{
     public double Cio_normalized(URI l, R a, R b) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-    
-    
-    
-    
-    
 }

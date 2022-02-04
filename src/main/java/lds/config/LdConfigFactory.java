@@ -25,7 +25,7 @@ public class LdConfigFactory {
         config.addParam(ConfigParam.LdDatasetMain , LdDatasetCreator.getDBpediaDataset(DBpediaChapter.En));
         
         if(Measure.getName(measure).equals("PICSS") || Measure.getName(measure).equals("EPICS") || Measure.getName(measure).equals("SimP"))
-            config.addParam(ConfigParam.resourcesCount , 2350906);
+            config.addParam(ConfigParam.resourcesCount , 2350906); // FIX: How can one define a fixed resource count for any dataset? Seems wrong.
         
         if(Measure.getName(measure).contains("W")){
             System.out.println("Using default conf creator for weighted similarity measures requires providing specific dataset");

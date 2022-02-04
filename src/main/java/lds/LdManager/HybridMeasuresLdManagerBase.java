@@ -8,12 +8,10 @@ package lds.LdManager;
 import java.util.ArrayList;
 import java.util.List;
 import lds.LdManager.ontologies.Ontology;
-import lds.feature.Feature;
 import lds.resource.R;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.RDFNode;
 import ldq.LdDataset;
 
@@ -40,23 +38,24 @@ public class HybridMeasuresLdManagerBase extends LdManagerBase {
                                     + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
                                     + "where {?subject ?property <" + a.getUri() + ">  }");
 
-
         ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
         while (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
+                
+                // S1r0hub: catch case that subject is no URI (e.g. is a blank node)
+                // RDF "subject" can be a blank node, see: https://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#section-triples
+                if (!qs.getResource("subject").isURIResource()) { continue; }
+                
                 subject = Ontology.compressValue(qs.getResource("subject"));
                 edge = Ontology.compressValue(qs.getResource("property"));
                 features.add(edge + "|" + subject + "|" + "In");
-
         }
 
         dataset.close();
         
-        if(! features.isEmpty())
-            return features;
-        else
-            return null;
+        if(!features.isEmpty()) { return features; }
+        return null;
     }
 
     public List<String> getOutgoingFeatures(R a) {
@@ -97,22 +96,21 @@ public class HybridMeasuresLdManagerBase extends LdManagerBase {
 
         dataset.close();
 
-        if(! features.isEmpty())
-            return features;
-        else
-            return null;
+        if(! features.isEmpty()) { return features; }
+        return null;
     }
-    
+
 
     public int getOutgoingFeatureFrequency(String property, String resource) {
         int count=0;
         
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
         
+        // Note: direction seems to be correct (see method for ingoing frequency)
         String query = "select (count(?subject) as ?count)\n"
-                                    + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
-                                    + "where {?subject  <" + Ontology.decompressValue(property) + "> <" + Ontology.decompressValue(resource) + ">}";
-        
+                + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
+                + "where {?subject  <" + Ontology.decompressValue(property) + "> <" + Ontology.decompressValue(resource) + ">}";
+
         query_cmd.setCommandText(query);
         
         ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
@@ -120,7 +118,6 @@ public class HybridMeasuresLdManagerBase extends LdManagerBase {
         if (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
             count = qs.getLiteral("count").getInt();
-
         }
 
         dataset.close();
@@ -129,28 +126,26 @@ public class HybridMeasuresLdManagerBase extends LdManagerBase {
     
 
     public int getIngoingFeatureFrequency(String property, String resource) {
-       int count =0;
+       int count = 0;
        
        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
-        
+       
+       // Note: direction seems to be correct, based on the paper
+       // Example: freq(starring, movie, Ingoing) = num of actors starring in the movie
        query_cmd.setCommandText("select (count(?object) as ?count)\n"
-                                    + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
-                                    + "where {<" + Ontology.decompressValue(resource) + ">  <" + Ontology.decompressValue(property) + "> ?object. "
-                                    + "filter isuri(?object)}");
-               
+           + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
+           + "where {<" + Ontology.decompressValue(resource) + ">  <" + Ontology.decompressValue(property) + "> ?object. "
+           + "filter isuri(?object)}");
 
        ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
        
-       
        if (resultSet.hasNext()) {
-            QuerySolution qs = resultSet.nextSolution();
-            count = qs.getLiteral("count").getInt();
+           QuerySolution qs = resultSet.nextSolution();
+           count = qs.getLiteral("count").getInt();
+       }
 
-        }
-
-        dataset.close();
-        return count;
-
+       dataset.close();
+       return count;
     }
     
     public int getOutgoingFeatureFrequency(String property) {
@@ -169,7 +164,6 @@ public class HybridMeasuresLdManagerBase extends LdManagerBase {
         if (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
             count = qs.getLiteral("count").getInt();
-
         }
 
         dataset.close();

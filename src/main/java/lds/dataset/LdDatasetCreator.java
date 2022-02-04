@@ -50,23 +50,27 @@ public class LdDatasetCreator {
     public static LdDataset getDBpediaDataset() {
         return getDBpediaDataset(DBpediaChapter.En);
     }
-    
+
+    /**
+     * Try to create a {@link LdDataset} instance using the {@link LdDatasetFactory}.
+     * @param service Endpoint URI
+     * @param defaultGraph default graph URI
+     * @param name Current dataset name stored in the factory.
+     * @return
+     */
     public static LdDataset getRemoteDataset(String service , String defaultGraph , String name) {
-		
-        
 
             LdDataset dataset = null;
 
             try {
-                    dataset = LdDatasetFactory.getInstance()
-                                    .service(service)
-                                    .name(name)
-                                    .defaultGraph(defaultGraph)
-                                    .create();
+                dataset = LdDatasetFactory.getInstance()
+                    .service(service)
+                    .defaultGraph(defaultGraph)
+                    .name(name)
+                    .create();
 
             } catch (Exception e) {
-
-                    fail("Error with dataset: " + e.getMessage());
+                fail("Error with dataset: " + e.getMessage());
             }
 
             return dataset;
@@ -114,7 +118,14 @@ public class LdDatasetCreator {
 
             return dataSet;
     }
-    
+
+    /**
+     * Create local {@link LdDataset} instance.
+     * Uses "<code>http://graph/dataset</code>" as default graph name.
+     * This is probably unusual so we consider it a bug. (author: S1r0hub)
+     * @param dataSetDir path to dataset
+     * @param name dataset name
+     */
     public static LdDataset getLocalDataset(String dataSetDir , String name){
         LdDataset dataset = null;
         
@@ -132,6 +143,12 @@ public class LdDatasetCreator {
         return dataset;
     }
     
+    /**
+     * Create local {@link LdDataset} instance.
+     * @param dataSetDir path to dataset
+     * @param graph name of the default graph
+     * @param name dataset name
+     */
     public static LdDataset getLocalDataset(String dataSetDir , String graph , String name){
         LdDataset dataset = null;
         

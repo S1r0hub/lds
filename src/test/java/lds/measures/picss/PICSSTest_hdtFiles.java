@@ -28,6 +28,9 @@ public class PICSSTest_hdtFiles {
         Config config = new Config();
         config.addParam(ConfigParam.useIndexes, false);
         config.addParam(ConfigParam.LdDatasetMain , dataset);
+        
+        // S1r0hub: original number used in PICSS paper from 2016
+        // Use SPARQL-query to retrieve: SELECT (COUNT(?s) as ?N) WHERE { ?s a owl:Thing }
         config.addParam(ConfigParam.resourcesCount , 2350906);
         
         R r1 = new R("http://dbpedia.org/resource/Bob_Dylan");

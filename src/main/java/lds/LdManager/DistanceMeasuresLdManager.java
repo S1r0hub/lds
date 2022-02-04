@@ -149,13 +149,13 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     
     
     public List<URI> getEdges(R a , R b) {
+
         URIFactory factory = URIFactoryMemory.getSingleton();
-        
+
         List<URI> edges = new ArrayList<>();
         List<String> edges_a = getEdges(a);
-        
         List<String> edges_b = getEdges(b);
-        
+
         if(( edges_a == null || edges_a.contains("-1")) ||  ( edges_b == null || edges_b.contains("-1")) )
             return null;
         
@@ -169,11 +169,9 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
             });
         }
         return edges;
-        
     }
     
     public int countObject(R a) {
-//        return (getObjects(a) == null ? 0 : getObjects(a).size());
 
         List<String> list = getObjects(a);
         
@@ -193,8 +191,15 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
         return objects.size();
 
     }
-    
+
+    /**
+     * Count how many resources are connected to <code>a</code> by link <code>l</code>.<br/>
+     * Effectively, this returns the objects of triples having <code>a</code> as subject.
+     * @param l the link (URI)
+     * @param a the subject resource
+     */
     public int countObject(URI l,  R a) {
+
         List<String> objects_a = getObjects(a);
         int count = 0;
         
@@ -205,24 +210,19 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
             String string[] =  objects.split("\\|");
             if(string[1].equals(Ontology.compressValue(l)))
                 count++;
-            
         }
         
         return count;
     }
-        
+    
     public int countSubject(R a) {
-//        return (getSubjects(a)== null ? 0 : getSubjects(a).size());
     
         List<String> list = getSubjects(a);
-        
-        if(list == null)
-            return 0;
+        if(list == null) { return 0; }
         
         List<String> subjects = new ArrayList<>();
         
         for(String item: list){
-//            System.out.println(item);
             String string[] =  item.split("\\|");
             String subject = string[0];
 
@@ -231,23 +231,24 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
         }
         
         return subjects.size();
-                
     }
 
     public int countSubject(URI l, R a) {
+
+        // FIX by S1r0hub: You store "-1" in the index if the result was previously null.
+        // Null is returned for empty lists (e.g. when retrieving common subjects).
+        // Therefore, this list can contain only "-1" but you don't check for it.
+        // Added catching this case in the for-loop below.
         List<String> subjects_a = getSubjects(a);
-        int count = 0;
+        if(subjects_a == null) { return 0; }
+        
         String uri = Ontology.compressValue(l);
         
-        if(subjects_a == null)
-            return count;
-        
+        int count = 0;
         for(String subjects: subjects_a){
-//            System.out.println(subjects);
+            if (subjects.equals("-1")) { continue; } // skip to deal with "-1" entries from indexing
             String string[] =  subjects.split("\\|" , 2);
-            if(string[1].equals(uri))
-                count++;
-            
+            if(string[1].equals(uri)) { count++; }
         }
         
         return count;
@@ -294,12 +295,18 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
         return commonSubjects;
     }*/
     
+    /**
+     * Checks if resource a and b are directly connected through link l.<br/>
+     * Retrieves all objects a is connected to and checks if they are linked to a.
+     * @param l the link (URI)
+     * @param a first resource
+     * @param b second resource
+     */
     public boolean isDirectlyConnected(URI l, R a, R b) {
         List<String> objects = getObjects(a);
         
         if(objects == null)
             return false;
-        
         else if(objects.contains(Ontology.compressValue(b)+"|"+Ontology.compressValue(l)))
             return true;
         

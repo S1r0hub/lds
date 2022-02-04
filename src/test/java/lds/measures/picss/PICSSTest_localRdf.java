@@ -18,29 +18,26 @@ import ldq.LdDataset;
  * @author Fouad Komeiha
  */
 public class PICSSTest_localRdf {
-    public static final String dataSetDir = System.getProperty("user.dir") + "/src/test/resources/data.rdf";
+
+	public static final String dataSetDir = System.getProperty("user.dir") + "/src/test/resources/data.rdf";
 
 	@Test
 	public void isPICSSWorksCorrectlyOnPaperExample() throws Exception {
+
 		LdDataset dataSet = LdDatasetCreator.getLocalDataset(dataSetDir, "example");
-                
-                 R r1 = new R("http://www.example.org#Fish");
-                 R r2 = new R("http://www.example.org#Whale");
-                
-                Config config = new Config();
-                config.addParam(ConfigParam.useIndexes, true);
-                config.addParam(ConfigParam.LdDatasetMain , dataSet);
-                config.addParam(ConfigParam.resourcesCount , 9);
-                
+
+		R r1 = new R("http://www.example.org#Fish");
+		R r2 = new R("http://www.example.org#Whale");
+
+		Config config = new Config();
+		config.addParam(ConfigParam.useIndexes, true);
+		config.addParam(ConfigParam.LdDatasetMain , dataSet);
+		config.addParam(ConfigParam.resourcesCount , 9);
 
 		PICSS picss = new PICSS(config);
-                picss.loadIndexes();
+		picss.loadIndexes();
 
-
-
-		double comp;               
-                
-                comp = picss.compare(r1, r2);
+		double comp = picss.compare(r1, r2);
 		assertEquals(0.11663433805905216, comp, 0.0);
 
 		comp = picss.compare(r2, r1);
@@ -48,10 +45,7 @@ public class PICSSTest_localRdf {
 
 		comp = picss.compare(r1, r1);
 		assertEquals(1.0, comp, 0.0);
-               
-                picss.closeIndexes();
-                
-                
 
+		picss.closeIndexes();
 	}
 }

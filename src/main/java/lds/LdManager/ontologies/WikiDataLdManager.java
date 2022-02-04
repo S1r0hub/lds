@@ -150,6 +150,7 @@ public class WikiDataLdManager {
     
     
     private List<String> getSuperConceptsFromInitial(String initialConcept){
+
         List<String> concepts = new ArrayList<>();
         
         ParameterizedSparqlString query_cmd = dataSet.prepareQuery();
@@ -157,7 +158,6 @@ public class WikiDataLdManager {
         // get superClasses:
         String query = "select * where { <" + initialConcept + ">  " + " <http://www.wikidata.org/prop/direct/P279>* ?c."
                                             + " filter (?c != <" + initialConcept + ">)}";
-                
         query_cmd.setCommandText(query);
 
         ResultSet rs = dataSet.executeSelectQuery(query_cmd.toString());
@@ -165,8 +165,8 @@ public class WikiDataLdManager {
         for (; rs.hasNext();) {
             QuerySolution soln = rs.nextSolution();
             String sameConcept = soln.getResource("c").getURI();
-            
-        }    
+            concepts.add(sameConcept); // this was missing!
+        }
         
         System.out.println(initialConcept + " : " + concepts.size());
         return concepts;
@@ -272,7 +272,4 @@ public class WikiDataLdManager {
         
     }
 
-    
-    
-    
 }

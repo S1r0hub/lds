@@ -24,7 +24,8 @@ public class LDSDTest_localRDF {
     @Test
     public void isLDSDWorksCorrectlyOnPaperExample() throws Exception{
     
-        LdDataset dataSet = LdDatasetCreator.getLocalDataset(dataSetDir, "example");
+        // adjusted to use "null" as graph name, otherwise test fails because a weird default graph name is set
+        LdDataset dataSet = LdDatasetCreator.getLocalDataset(dataSetDir, null, "example");
 
         R r1 = new R("http://www.example.org#Fish");
         R r2 = new R("http://www.example.org#Whale");

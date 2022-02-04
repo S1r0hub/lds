@@ -114,7 +114,7 @@ public class Utility {
 
     public static boolean isNumeric(String strNum) {
         try {
-            double d = Double.parseDouble(strNum);
+            Double.parseDouble(strNum);
         } catch (NumberFormatException | NullPointerException nfe) {
             return false;
         }
@@ -146,8 +146,5 @@ public class Utility {
     public static double normalizeValue(double value , double min , double max){
         return (value - min)/(max - min);
     }
-    
-    
-   
-    
+
 }

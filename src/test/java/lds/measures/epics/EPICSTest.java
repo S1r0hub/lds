@@ -6,7 +6,6 @@
 package lds.measures.epics;
 
 import lds.config.Config;
-import lds.measures.picss.*;
 import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
 import lds.config.LdConfigFactory;
@@ -41,14 +40,14 @@ public class EPICSTest {
         //specifying the main dataset that will be used for querying, in our case DBpedia
         config.addParam("LdDatasetMain" , dataset);
         
-        //specifiying the number of resources -only resources and not literals- found in the dataset to be used in calculation
+        // specifying the number of resources -only resources and not literals- found in the dataset to be used in calculation
         config.addParam("resourcesCount" , 2350906);*/
        
         R r1 = new R("http://dbpedia.org/resource/Coast");
         R r2 = new R("http://dbpedia.org/resource/Shore");
         
         
-        //Initialzie the engine class object
+        // Initialize the engine class object
         LdSimilarityEngine engine = new LdSimilarityEngine();
         
         //creates a new similarity class object and passes the config that contains necessary parameters to it, also loads needed indexes if necessary

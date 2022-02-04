@@ -8,7 +8,6 @@ package lds.measures.ldsd;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.config.Config;
-import lds.measures.resim.Resim;
 import lds.resource.R;
 import org.openrdf.model.URI;
 
@@ -26,29 +25,27 @@ public class LDSD_cw extends LDSD{
     public double compare(R a, R b) {
         try{
             edges = LDSDLDLoader.getEdges(a, b);
-
-            if(edges == null)
-                return 0;
-            else
-                return LDSD_cw_sim(a, b);
-        } catch (Exception ex) {
-                Logger.getLogger(LDSD_cw.class.getName()).log(Level.SEVERE, null, ex);
-                return -1;
+            System.out.println("[TMP] Edges total: " + edges.size());
+            if(edges == null) { return 0; }
+            return LDSD_cw_sim(a, b);
+        }
+        catch (Exception ex) {
+            Logger.getLogger(LDSD_cw.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
         }
     }
     
   
     public double LDSD_cw(R a, R b) {
-       double cdA_norm = 0, cdB_norm = 0, cii_norm = 0, cio_norm = 0;
 
+        double cdA_norm = 0, cdB_norm = 0, cii_norm = 0, cio_norm = 0;
+        
         for (URI l : edges) {
-
                 cdA_norm = cdA_norm + Cd_normalized(l, a, b);
                 cdB_norm = cdB_norm + Cd_normalized(l, b, a);
-                cii_norm = cii_norm + Cii_normalized(l, a , b);
-                cio_norm = cio_norm + Cio_normalized(l, a , b);
-
-        }      	
+                cii_norm = cii_norm + Cii_normalized(l, a, b);
+                cio_norm = cio_norm + Cio_normalized(l, a, b);
+        }
 
         return 1 / (1 + cdA_norm + cdB_norm + cii_norm + cio_norm);
     }
@@ -56,5 +53,4 @@ public class LDSD_cw extends LDSD{
     public double LDSD_cw_sim(R a, R b) {
         return 1 - LDSD_cw(a , b);
     }
-    
 }

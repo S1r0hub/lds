@@ -177,8 +177,4 @@ public class WResim extends ResourceSimilarity{
     public double Cio_normalized(URI li, URI lj, R a, R b) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
-    
-    
 }

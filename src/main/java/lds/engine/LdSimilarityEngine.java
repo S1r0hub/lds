@@ -37,49 +37,42 @@ public class LdSimilarityEngine {
                     Constructor<?> measureConstructor = measureClass.getConstructor(Config.class);
                     ldMeasure = (LdSimilarity) measureConstructor.newInstance(config);
                     this.measure = ldMeasure;
-
                     ldMeasure.loadIndexes();
-
-
             } 
             catch (Exception e) {
                     e.printStackTrace();
             }
-
-
         }
         
         public void load(Measure measureName){
-            
             load(measureName , LdConfigFactory.createDefaultConf(measureName));
-
-
         }
         
         
         //normal similarity_MultiThreads calculation of a pair of resources
         public double similarity(R a, R b){
             double score = 0;
-            score = measure.compare(a, b);
+            // S1r0hub: catching errors to return suitable similarity
+            try { score = measure.compare(a, b); }
+            catch (Exception ex) {
+            	System.err.println("Failed to compare: a=" + a.toString() + ", b=" + b.toString() + "; reason: " + ex.getMessage());
+            }
             return score;
         }
         
         
         public void close(){
             measure.closeIndexes();
-           
         }
         
         public void similarity(BenchmarkFile source , BenchmarkFile results , int threadsNum , boolean skipCalculated ) throws IOException, FileNotFoundException, InterruptedException, ExecutionException{
            LdBenchmark benchmark = new LdBenchmark(source , results);
            similarity(benchmark , threadsNum , skipCalculated );
-           
         }
         
         public void similarity(BenchmarkFile source , int threadsNum , boolean skipCalculated ) throws IOException, FileNotFoundException, InterruptedException, ExecutionException{
            LdBenchmark benchmark = new LdBenchmark(source);
            similarity(benchmark , threadsNum , skipCalculated );
-           
         }
        
       

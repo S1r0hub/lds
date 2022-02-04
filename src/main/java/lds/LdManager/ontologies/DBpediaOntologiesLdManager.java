@@ -6,15 +6,11 @@
 package lds.LdManager.ontologies;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import lds.dataset.LdDatasetCreator;
-import lds.measures.lods.ontologies.O;
 import lds.resource.R;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.apache.jena.vocabulary.OWL;

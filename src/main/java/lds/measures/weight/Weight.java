@@ -29,11 +29,11 @@ public class Weight {
                                     
     
     
-    public Weight(WeightMethod method , DistanceMeasuresLdManager ldManagerMain , DistanceMeasuresLdManager ldManagerSpecific , boolean useIndexes) throws Exception{
-        this.method = method;
-        this.datasetLoader = ldManagerMain;
-        this.specificClassLoader = ldManagerSpecific;
-        this.useIndex = useIndexes;
+    public Weight(WeightMethod wmethod, DistanceMeasuresLdManager ldManagerMain , DistanceMeasuresLdManager ldManagerSpecific , boolean useIndexes) throws Exception{
+        method = wmethod;
+        datasetLoader = ldManagerMain;
+        specificClassLoader = ldManagerSpecific;
+        useIndex = useIndexes;
     }
     
     
@@ -59,26 +59,21 @@ public class Weight {
     public double linkWeight(URI l , R a , R b) {
         double weight = 0;
         if (useIndex) {
-            if(this.method == WeightMethod.RSLAW){
+            if(method == WeightMethod.RSLAW){
                 weight = weightsIndex.getDoubleFromIndex(l.stringValue() , baseClassPath + "calculateWeights_RSLAW" , a , b);
-                
-
             }
-            else if(this.method == WeightMethod.ITW){
+            else if(method == WeightMethod.ITW){
                 weight = weightsIndex.getDoubleFromIndex(a.getUri().toString()+ ":" + l.stringValue()+ ":" + b.getUri().toString()  , baseClassPath + "calculateWeights_ITW" , a , b);
             }
-            
-     
-           
            return weight;
         }
         
         else{
-            if(this.method == WeightMethod.RSLAW){
+            if(method == WeightMethod.RSLAW){
                 return RSLAW(l);
 
             }
-            else if(this.method == WeightMethod.ITW){
+            else if(method == WeightMethod.ITW){
                 double w = 0 , min = 0 , max = 0;
                 
                 min = getMinWeight(a , b);
@@ -203,7 +198,7 @@ public class Weight {
             }
         }
         
-        return max;         
+        return max;
     }
     
 }

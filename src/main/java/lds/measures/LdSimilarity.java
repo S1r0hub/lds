@@ -1,10 +1,6 @@
 package lds.measures;
 
 import lds.resource.R;
-import slib.graph.model.graph.G;
-
-
-
 
 public interface LdSimilarity {
     

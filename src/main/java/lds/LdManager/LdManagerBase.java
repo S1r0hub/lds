@@ -25,43 +25,48 @@ public class LdManagerBase implements LdManager{
     protected LdDataset dataset;
     protected String baseClassPath = "lds.LdManager.LdManagerBase.";
 
-    
+
     public  LdManagerBase(LdDataset dataset) {
-	this.dataset = dataset;
+        this.dataset = dataset;
     }
     
     
     @Override
     public List<String> getSubjects(R a) {
-        List<String> commonSubjects = new ArrayList();
-    
+
+        List<String> commonSubjects = new ArrayList<>();
+
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-        query_cmd.setCommandText("select distinct ?subject ?property " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") 
-                                                             + " where {?subject ?property <" + a.getUri() + ">}");
+        query_cmd.setCommandText("select distinct ?subject ?property "
+            + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") 
+            + " where {?subject ?property <" + a.getUri() + ">}");
 
         ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
         while (resultSet.hasNext()) {
+
             QuerySolution qs = resultSet.nextSolution();
+
+            // S1r0hub: catch case that subject is no URI
+            // RDF "subject" can be a blank node, see: https://www.w3.org/TR/2014/REC-rdf11-concepts-20140225/#section-triples
+            if (!qs.getResource("subject").isURIResource()) { continue; }
+
             String resource = Ontology.compressValue(qs.getResource("subject"));
             String property = Ontology.compressValue(qs.getResource("property"));
             commonSubjects.add(resource+"|"+property);
-
         }
         // dataset.close();
 
-        if(! commonSubjects.isEmpty())
-            return commonSubjects;
-        else
-            return null;
+        if(!commonSubjects.isEmpty()) { return commonSubjects; }
+        return null;
     } 
- 
-    
+
 
     @Override
     public List<String> getSameAsResources(R a) {
-        List<String> sameAsresources = new ArrayList();
+
+        List<String> sameAsresources = new ArrayList<>();
         
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -74,7 +79,6 @@ public class LdManagerBase implements LdManager{
             QuerySolution qs = resultSet.nextSolution();
             String resource = Ontology.compressValue(qs.getResource("object"));
             sameAsresources.add(resource);
-
         }
 
         if(! sameAsresources.isEmpty())
@@ -109,7 +113,8 @@ public class LdManagerBase implements LdManager{
     
     @Override
     public List<String> getCommonObjects(R a , R b){
-        List<String> commonObjects = new ArrayList();
+
+        List<String> commonObjects = new ArrayList<>();
             
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -126,7 +131,6 @@ public class LdManagerBase implements LdManager{
             String property1 = Ontology.compressValue(qs.getResource("property1"));
             String property2 = Ontology.compressValue(qs.getResource("property2"));
             commonObjects.add(resource+"|"+property1+"|"+property2);
-
         }
 
         if(! commonObjects.isEmpty())
@@ -137,7 +141,8 @@ public class LdManagerBase implements LdManager{
     
     @Override
       public List<String> getCommonObjects(R a){
-        List<String> commonObjects = new ArrayList();
+
+        List<String> commonObjects = new ArrayList<>();
             
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -155,7 +160,6 @@ public class LdManagerBase implements LdManager{
             String property1 = Ontology.compressValue(qs.getResource("property1"));
             String property2 = Ontology.compressValue(qs.getResource("property2"));
             commonObjects.add(resource+"|"+property1+"|"+property2);
-
         }
 
         if(! commonObjects.isEmpty())
@@ -166,7 +170,8 @@ public class LdManagerBase implements LdManager{
     
     @Override
     public List<String> getCommonSubjects(R a , R b){
-        List<String> commonSubjects = new ArrayList();
+
+        List<String> commonSubjects = new ArrayList<>();
         
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -192,7 +197,8 @@ public class LdManagerBase implements LdManager{
     
     @Override
     public List<String> getCommonSubjects(R a){
-        List<String> commonSubjects = new ArrayList();
+
+        List<String> commonSubjects = new ArrayList<>();
         
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -218,14 +224,22 @@ public class LdManagerBase implements LdManager{
     
     @Override
     public List<String> getEdges(R a) { 
-        List<String> edges = new ArrayList();
+
+        List<String> edges = new ArrayList<>();
         
         String edge;
 
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
+        // added by S1r0hub to better allow queries without "from", even if graph name is an empty string
+        String from_part = "";
+        if (dataset.getDefaultGraph() != null && !dataset.getDefaultGraph().isEmpty()) {
+        	from_part = "from <" + dataset.getDefaultGraph()+ "> \n";
+        }
+
         query_cmd.setCommandText("select distinct ?property \n"
-                                + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
+                                //+ (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n")
+                                + from_part
                                 + "where { \n"
                                 + "{ \n"
                                 + "select distinct ?property \n"
@@ -249,10 +263,8 @@ public class LdManagerBase implements LdManager{
 
       // dataset.close();
 
-      if(! edges.isEmpty())
-            return edges;
-      else
-            return null;
+      if(!edges.isEmpty()) { return edges; }
+      return null;
     }
 
     
@@ -279,12 +291,9 @@ public class LdManagerBase implements LdManager{
             // dataset.close();
         }
 
-        if(! objects.isEmpty())
-                return objects;
-            else
-                return null;
-            
-        }
+        if(! objects.isEmpty()) { return objects; }
+        return null;
+    }
     
     @Override
     public int countShareCommonObjects(URI link , R a){
@@ -303,7 +312,6 @@ public class LdManagerBase implements LdManager{
                 count = qs.getLiteral("count").getInt();
                 // dataset.close();
                 return count;
-
         }
 
         // dataset.close();
@@ -327,12 +335,10 @@ public class LdManagerBase implements LdManager{
                 count = qs.getLiteral("count").getInt();
                 // dataset.close();
                 return count;
-
         }
 
             // dataset.close();
             return 0;
-
     }
     
     
@@ -357,13 +363,11 @@ public class LdManagerBase implements LdManager{
                 count = qs.getLiteral("count").getInt();
                 // dataset.close();
                 return count;
-
         }
         
 
         // dataset.close();
         return 0;
-        
     }
 
 //    @Override
@@ -391,5 +395,3 @@ public class LdManagerBase implements LdManager{
 //        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 //    }
 }
-    
-

@@ -26,15 +26,15 @@ import lds.utility.Utility;
 public class PICSS implements LdSimilarity {
     protected PicssLdManager ldManager;
     protected boolean useIndexes;
-    protected int NumberOfResources;
+    protected int numberOfResources;
 
     public PICSS(Config config) throws Exception {
         if (config.getParam(ConfigParam.LdDatasetMain) == null || config.getParam(ConfigParam.useIndexes) == null || config.getParam(ConfigParam.resourcesCount) == null)
-            throw new Exception("Some configuration parameters missing");
+            throw new Exception("Some configuration parameters are missing (probably resourcesCount?)");
 
         this.ldManager = new PicssLdManager((LdDataset) config.getParam(ConfigParam.LdDatasetMain), (Boolean) config.getParam(ConfigParam.useIndexes));
         this.useIndexes = (Boolean) config.getParam(ConfigParam.useIndexes);
-        this.NumberOfResources = (Integer) config.getParam(ConfigParam.resourcesCount);
+        this.numberOfResources = (Integer) config.getParam(ConfigParam.resourcesCount);
     }
 
     @Override
@@ -44,7 +44,6 @@ public class PICSS implements LdSimilarity {
         if (useIndexes) {
             ldManager.closeIndexes();
         }
-
     }
 
 
@@ -67,13 +66,14 @@ public class PICSS implements LdSimilarity {
                 Logger.getLogger(PICSS.class.getName()).log(Level.SEVERE, null, ex);
                 return -1;
         }
-
     }
 
     private double PICSS(R a, R b) {
 
         List<String> features_a = ldManager.getFeatures(a);
+        System.out.println("[TMP] PICSS get features_a");
         List<String> features_b = ldManager.getFeatures(b);
+        System.out.println("[TMP] PICSS get features_b");
 
         if (features_a.isEmpty() && features_b.isEmpty())
             return 0;
@@ -89,8 +89,11 @@ public class PICSS implements LdSimilarity {
         List<String> unique_features_a = Feature.uniqueFeatures(features_a, features_b);
         List<String> unique_features_b = Feature.uniqueFeatures(features_b, features_a);
 
+        System.out.println("[TMP] PICSS computing common features: " + common_features.size());
         double x = PIC(common_features);
+        System.out.println("[TMP] PICSS computing unique features a: " + unique_features_a.size());
         double y = PIC(unique_features_a);
+        System.out.println("[TMP] PICSS computing unique features b: " + unique_features_b.size());
         double z = PIC(unique_features_b);
 
         if ((x + y + z) == 0)
@@ -101,52 +104,58 @@ public class PICSS implements LdSimilarity {
     }
 
 
+    /**
+     * Compute sum of information content of the given features.
+     * @param F a list of features encoded as String
+     */
     protected double PIC(List<String> F) {
+
         double s = 0.0;
 
         for (String f : F) {
-
             double phi_ = phi(f);
             if (phi_ != 0) {
-                double x = Utility.log2(phi_ / this.NumberOfResources);
+                // Compute log2 of relative frequency of a feature f
+                double x = Utility.log2(phi_ / this.numberOfResources);
                 double log = -x;
                 s = s + log;
             }
-
         }
 
         return s;
     }
 
 
+    /**
+     * Returns the frequency of this feature (can be 0).<br/>
+     * E.g. if we initially had (Movie1 -- starring --> Actor1)
+     * and want features of Actor1, we will get as Feature F1: (starring, Movie1, Ingoing).<br/>
+     * The frequency of F1 is the amount of triples, that have Movie1 as subject,
+     * starring as predicate and any resource (not Literals) as object.<br/>
+     * I.e. the amount of actors starring in the movie.<br/>
+     * For outgoing direction of the relation, this is the other way around.
+     * @param feature The feature encoded as a String: "relationType|resource|direction".
+     */
     protected double phi(String feature) {
 
-        int count = 0;
-
         String direction = Feature.getDirection(feature);
-        if (direction == null)
-            return count;
+        if (direction == null) { return 0; }
 
         String property = Feature.getLink(feature);
-        if (property == null)
-            return count;
+        if (property == null) { return 0; }
 
         String resource = Feature.getVertex(feature);
-        if (resource == null)
-            return count;
-
+        if (resource == null) { return 0; }
 
         if (direction.equals("In")) {
-            count = ldManager.getIngoingFeatureFrequency(property, resource);
+            return ldManager.getIngoingFeatureFrequency(property, resource);
         }
 
         if (direction.equals("Out")) {
-            count = ldManager.getOutgoingFeatureFrequency(property, resource);
+            return ldManager.getOutgoingFeatureFrequency(property, resource);
         }
 
-
-        return count;
-
+        return 0;
     }
 
     @Override

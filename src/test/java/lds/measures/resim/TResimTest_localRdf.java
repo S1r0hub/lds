@@ -34,7 +34,7 @@ public class TResimTest_localRdf {
 
 		try {
 			dataSet = LdDatasetFactory.getInstance().name("example").file(dataSetDir)
-					.defaultGraph("http://graphResim/dataset").create();
+				.defaultGraph("http://graphResim/dataset").create();
 
 		} catch (Exception e) {
 			fail(e.getMessage());

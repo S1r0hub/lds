@@ -13,10 +13,10 @@ import java.util.Map;
  * @author Fouad Komeiha
  */
 public class LdIndexerManager {
+
     private static Map<String, LdIndex> indexes;
-    
-    static private LdIndexerManager indexManager;
-    
+    private static LdIndexerManager indexManager;
+
     private LdIndexerManager(){
         indexes = new HashMap<>();
     }
@@ -46,9 +46,10 @@ public class LdIndexerManager {
         }
 
     }
-    
-    public void closeAllIndexes(){
-        this.indexes = null;
+
+
+    public void closeAllIndexes() {
+        indexes = null;
     }
-    
+
 }

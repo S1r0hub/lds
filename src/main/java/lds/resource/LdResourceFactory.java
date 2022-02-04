@@ -1,12 +1,9 @@
 package lds.resource;
 
-import org.apache.jena.query.QueryFactory;
-
-import ldq.LdDatasetFactory;
 
 public class LdResourceFactory {
-	private static LdResourceFactory factory;
 
+	private static LdResourceFactory factory;
 	
 	private String name;
 	private String baseUri;
@@ -33,6 +30,5 @@ public class LdResourceFactory {
 		this.baseUri = uri;
 		this.name = "";
 		return factory;
-
 	}
 }

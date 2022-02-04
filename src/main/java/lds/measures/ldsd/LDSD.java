@@ -26,7 +26,7 @@ public abstract class LDSD implements LdSimilarity {
     protected LdsdLdManager LDSDLDLoader;
     protected LdsdLdManager SpecificLDSDLDLoader;
     protected Weight weight;
-    protected boolean useIndeses;
+    protected boolean useIndexes;
     
     public LDSD(Config config) throws Exception {
         int confsize = config.getSize();
@@ -39,7 +39,7 @@ public abstract class LDSD implements LdSimilarity {
                 
             case 2:
                 this.LDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam(ConfigParam.LdDatasetMain) , (Boolean) config.getParam(ConfigParam.useIndexes) );
-                this.useIndeses = (Boolean) config.getParam(ConfigParam.useIndexes);
+                this.useIndexes = (Boolean) config.getParam(ConfigParam.useIndexes);
                 break;
                 
             case 3:
@@ -50,7 +50,7 @@ public abstract class LDSD implements LdSimilarity {
                 this.SpecificLDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam(ConfigParam.LdDatasetSpecific) , (Boolean) config.getParam(ConfigParam.useIndexes) );
                 
                 this.weight = new Weight((WeightMethod)config.getParam(ConfigParam.WeightMethod) , LDSDLDLoader , SpecificLDSDLDLoader , (Boolean)config.getParam(ConfigParam.useIndexes));
-                this.useIndeses = (Boolean) config.getParam(ConfigParam.useIndexes);
+                this.useIndexes = (Boolean) config.getParam(ConfigParam.useIndexes);
                 break;            
         }
 
@@ -58,7 +58,7 @@ public abstract class LDSD implements LdSimilarity {
         
     @Override
     public void closeIndexes(){
-        if(useIndeses){
+        if(useIndexes){
             LDSDLDLoader.closeIndexes();
             
             if(SpecificLDSDLDLoader != null && weight != null){
@@ -75,7 +75,7 @@ public abstract class LDSD implements LdSimilarity {
     
     @Override
     public void loadIndexes() throws Exception{
-        if(useIndeses){
+        if(useIndexes){
             LDSDLDLoader.loadIndexes();
             
             if(SpecificLDSDLDLoader != null && weight != null){
@@ -94,13 +94,10 @@ public abstract class LDSD implements LdSimilarity {
 
     /**
      * Returns number of links between a ---n--> b
-     * 
-     * @param a
-     * @param b
-     * @param g
+     * @param a first resource
+     * @param b second resource
      * @return
      */
-
     public int Cd(R a, R b) {
         int count = 0;
         for(URI edge: edges){
@@ -111,35 +108,25 @@ public abstract class LDSD implements LdSimilarity {
     }
 
     /**
-     * Nbr of nodes from a ---- l ---> count(x)
-     * 
-     * @param a
-     * @param l
-     * @param g
-     * @return
+     * Number of nodes from a ---- l ---> count(x).
+     * @param a resource
+     * @param l outgoing link URI
+     * @return amount of nodes a connects to
      */
-
-    //similar to Resim
     public int Cd(URI l, R a) {
-        return LDSDLDLoader.countObject(l , a);
+        return LDSDLDLoader.countObject(l, a);
     }
 
     /**
-     * returns 1 if a ----- count(l) ----> b
-     * 
-     * @param a
-     * @param b
-     * @param l
-     * @param g
-     * @return
+     * Returns 1 if a ---- count(l) ---> b.
+     * @param a first resource
+     * @param b second resource
+     * @param l link URI from a to b
+     * @return 1 if a is directly connected to b, otherwise 0
      */
-
-    //similar to Resim
     public int Cd(URI l, R a, R b) {
-        if(LDSDLDLoader.isDirectlyConnected(l, a, b))
-            return 1;
-        else
-            return 0;
+        if(LDSDLDLoader.isDirectlyConnected(l, a, b)) { return 1; }
+        return 0;
     }
 
 

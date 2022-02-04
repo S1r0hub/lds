@@ -5,7 +5,6 @@
  */
 package lds.LdManager.ontologies;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -257,10 +256,18 @@ public class Ontology {
         
     }
 
+    /**
+     * Compresses information of a {@link Resource},<br/>
+     * i.e. uses prefix instead of absolute namespace.<br/>
+     * Note that this method can fail if any part of the resource
+     * can not be retrieved (e.g. from blank nodes) (S1r0hub).
+     */
     public static String compressValue(Resource resource) {
+
         String nameSpace = resource.getNameSpace();
         String localName = resource.getLocalName();
         String r = resource.getURI();
+        
         if (!nameSpace.endsWith("/") || !nameSpace.endsWith("#")) {
             if (r.contains("#")) {
                 nameSpace = r.substring(0, r.lastIndexOf("#") + 1).trim();
@@ -281,6 +288,11 @@ public class Ontology {
         return prefix + localName;
     }
 
+    /**
+     * Returns a string using the prefix of a URI instead of whole address.<br/>
+     * E.g. <code>http://dbpedia.org/resource/Lamp</code> could be <code>dbr:Lamp</code>.
+     * @param uri the URI to compress
+     */
     public static String compressValue(URI uri) {
         String nameSpace = uri.getNamespace();
         String localName = uri.getLocalName();
@@ -324,6 +336,5 @@ public class Ontology {
         }
         return namespace + localName;
     }
-    
-       
+
 }

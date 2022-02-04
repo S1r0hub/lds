@@ -5,9 +5,7 @@
  */
 package ldq;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -17,17 +15,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.apache.jena.vocabulary.*;
-import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class LdDatasetBase.
  */
@@ -157,32 +150,28 @@ public abstract class LdDatasetBase implements LdDataset {
 	/**
 	 * Load configuration options from config.ttl file
 	 *
-	 * @param datasetPath
-	 *            : path to dataset location
+	 * @param datasetPath path to dataset location
 	 * @return model
-	 * @throws Exception
+	 * @throws Exception if datasetPath is null
 	 */
 	public static Model loadConfig(String datasetPath) throws Exception {
 
 		if (null == datasetPath)
 			throw new Exception("dataset name must be set");
-
 		
 		Model config = RDFDataMgr.loadModel(datasetPath + "/" + "config.ttl");
-
 		return config;
-
 	}
 
 	
 
 	/**
-	 * Load prefixes from dataset prefixes.ttl file TODO: use http://prefix.cc/ ?
+	 * Load prefixes from dataset prefixes.ttl file
+	 * TODO: use http://prefix.cc/ ?
 	 * 
 	 * @param datasetPath
 	 * @return the prefix mapping
-	 * @throws Exception
-	 *             the exception
+	 * @throws Exception if dataset path was not set
 	 */
 	public static PrefixMapping loadPrefixes(String datasetPath) throws Exception {
 
@@ -197,9 +186,8 @@ public abstract class LdDatasetBase implements LdDataset {
 	/**
 	 * Read specific SPARQL query from queries directory
 	 * 
-	 * @param QueryName
+	 * @param queryName
 	 * @return the query string
-	 * 
 	 */
 	public String getQuery(String queryName) throws IOException {
 		String queryPath = path + name + "/queries/" + queryName + ".sparql";
@@ -209,13 +197,12 @@ public abstract class LdDatasetBase implements LdDataset {
 	/**
 	 * TODO: store a query in queries folder
 	 * 
-	 * @param QueryName
-	 * @return the query string
-	 * 
+	 * @param query
 	 */
 	public void storeQuery(String query) throws IOException {
 		// dataset repository has to be exist
 		// if "queries" repository not available, create it
+		throw new RuntimeException("This method is not yet implemented!");
 	}
 
 	/**
@@ -223,12 +210,11 @@ public abstract class LdDatasetBase implements LdDataset {
 	 *
 	 * @return ParameterizedSparqlString
 	 */
-
 	public ParameterizedSparqlString prepareQuery() {
 
 		ParameterizedSparqlString q = new ParameterizedSparqlString();
 		q.clearNsPrefixMap();
-                
+
 		String baseUri = prefixes.getNsPrefixURI(":");
 		if (baseUri != null)
 			q.setBaseUri(baseUri);
@@ -241,9 +227,9 @@ public abstract class LdDatasetBase implements LdDataset {
 		return q;
 	}
 	
+	@SuppressWarnings("unused")
 	private void initQueryExecution(String query) {
 		queryExecution = QueryExecutionFactory.create(query);
-		
 	}
 
 }

@@ -7,7 +7,6 @@ package ldq;
 
 import java.io.IOException;
 
-import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -40,14 +39,13 @@ public class HDTFileLdDataset extends LdDatasetBase implements LdDataset {
 		} catch (Exception e) {
 			System.out.println("Halt! HDT not loaded!");
 		}
-
 	}
 
 	public ResultSet executeSelectQuery(String query) {
 		Query HDTquery = QueryFactory.create(query);
-        QueryExecution queryExec = QueryExecutionFactory.create(HDTquery, model);
-        ResultSet results = queryExec.execSelect();
-       return results;
+		QueryExecution queryExec = QueryExecutionFactory.create(HDTquery, model);
+		ResultSet results = queryExec.execSelect();
+		return results;
 	}
 
 	public Model executeConstructQuery(String query) {
@@ -66,8 +64,13 @@ public class HDTFileLdDataset extends LdDatasetBase implements LdDataset {
 	}
 
 	public void close() {
-		// TODO Auto-generated method stub
-		
+
+		if (!model.isClosed()) { model.close(); }
+		if (!graph.isClosed()) { graph.close(); }
+		try { hdt.close(); }
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

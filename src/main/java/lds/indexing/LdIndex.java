@@ -24,6 +24,7 @@ import ldq.LdDataset;
  * @author Fouad Komeiha
  */
 public class LdIndex {
+
     String indexFilePath = "";
     DB db = null;
     
@@ -160,9 +161,8 @@ public class LdIndex {
         }
         
         return key;
-        
     }
-    
+
 
     public List<String> getListFromIndex(LdDataset dataset, String key , String methodPath , Object... args) {
 
@@ -175,7 +175,6 @@ public class LdIndex {
             updateIndexSet(dataset , key , methodPath , args);
             return getListFromIndex(dataset , key , methodPath , args);
         }
-
     }
 
 
@@ -247,7 +246,7 @@ public class LdIndex {
 
     }
 
-    public  synchronized void updateIndexSet(LdDataset dataset , String key , String methodPath , Object... args){
+    public synchronized void updateIndexSet(LdDataset dataset , String key , String methodPath , Object... args){
 
         String classPath = Utility.getClassPath(methodPath);
         String methodName = Utility.getMethodName(methodPath);
@@ -259,17 +258,15 @@ public class LdIndex {
             }
 
             else if(returnedItem == null){
-
                 List<String> list = new ArrayList<>();
                 list.add("-1");
                 this.addList(key , list);
-
             }
         }
         catch(Exception ex){
             Logger.getLogger(Utility.class.getName()).log(Level.SEVERE, null, ex);
             this.close();
-        }          
+        }
     }
 
     public synchronized void updateIndexTree(LdDataset dataset, String key, String methodPath , Object... args) {      
@@ -321,6 +318,4 @@ public class LdIndex {
         Utility.executeMethod(classPath , methodName , args);
     }
 
-    
-            
 }

@@ -39,21 +39,21 @@ public class PICSSTest {
         //specifying the main dataset that will be used for querying, in our case DBpedia
         config.addParam("LdDatasetMain" , dataset);
         
-        //specifiying the number of resources -only resources and not literals- found in the dataset to be used in calculation
+        //specifying the number of resources -only resources and not literals- found in the dataset to be used in calculation
         config.addParam("resourcesCount" , 2350906);*/
                 
         R r1 = new R("http://dbpedia.org/resource/Coast");
         R r2 = new R("http://dbpedia.org/resource/Shore");
         
-        //Initialzie the engine class object
+        //Initialize the engine class object
         LdSimilarityEngine engine = new LdSimilarityEngine();
         
         //creates a new similarity class object and passes the config that contains necessary parameters to it, also loads needed indexes if necessary
-        //PICSS similarity calculaton
+        //PICSS similarity calculation
         engine.load(Measure.PICSS , config);        
         System.out.println( engine.similarity(r1 , r2) );
         
-        //ends calculation for the chosen similaarity and closes all indexes if created
+        //ends calculation for the chosen similarity and closes all indexes if created
         engine.close();
         
         
