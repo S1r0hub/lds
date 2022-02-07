@@ -27,12 +27,10 @@ public class Resim extends ResourceSimilarity {
 		double cdA_norm = 0, cdB_norm = 0, cii_norm = 0, cio_norm = 0;
 
 		for (URI l : edges) {
-
 			cdA_norm = cdA_norm + Cd_normalized(l, a, b);
 			cdB_norm = cdB_norm + Cd_normalized(l, b, a);
 			cii_norm = cii_norm + Cii_normalized(l, a, b);
 			cio_norm = cio_norm + Cio_normalized(l, a, b);
-
 		}
 
 		return 1 / (1 + cdA_norm + cdB_norm + cii_norm + cio_norm);
@@ -45,12 +43,14 @@ public class Resim extends ResourceSimilarity {
 		double cd_norm = 0;
 
 		if (cd != 0) {
+			
 			cd_l = Cd(l, a);
+			cd_norm = (double) cd; // final cd result
+			
+			// normalize if possible (prevent log10(0)), otherwise assume cd / 1
 			if (cd_l != 0) {
-				double x = 1 + Math.log10(cd_l);
-				cd_norm = (double) cd / x;
-			} else
-				cd_norm = (double) cd;
+				cd_norm /= 1 + Math.log10(cd_l);
+			}
 		}
 
 		return cd_norm;
@@ -60,19 +60,20 @@ public class Resim extends ResourceSimilarity {
 	public double Cii_normalized(URI l, R a, R b) {
 
 		int ciiA, ciiB, cii;
-		double x, cii_norm = 0;
+		double cii_norm = 0;
 
 		cii = Cii(l, a, b);
 
 		if (cii != 0) {
+
 			ciiA = Cii(l, a);
 			ciiB = Cii(l, b);
-
+			cii_norm = (double) cii; // final cii result
+			
+			// normalize if possible (prevent log10(0)), otherwise assume cd / 1
 			if ((ciiA + ciiB) != 0) {
-				x = 1 + Math.log10((ciiA + ciiB) / 2);
-				cii_norm = ((double) cii) / x;
-			} else
-				cii_norm = (double) cii;
+				cii_norm /= 1 + Math.log10((ciiA + ciiB) / 2);
+			}
 		}
 
 		return cii_norm;
@@ -82,20 +83,20 @@ public class Resim extends ResourceSimilarity {
 	public double Cio_normalized(URI l, R a, R b) {
 		
 		int cioA, cioB, cio;
-		double cio_norm = 0, x;
+		double cio_norm = 0;
 
 		cio = Cio(l, a, b);
 
 		if (cio != 0) {
+			
 			cioA = Cio(l, a);
 			cioB = Cio(l, b);
+			cio_norm = (double) cio; // final cio result
 
+			// normalize if possible (prevent log10(0)), otherwise assume cd / 1
 			if ((cioA + cioB) != 0) {
-				x = 1 + Math.log10((cioA + cioB) / 2);
-
-				cio_norm = ((double) cio) / x;
-			} else
-				cio_norm = (double) cio;
+				cio_norm /= 1 + Math.log10((cioA + cioB) / 2);
+			}
 		}
 
 		return cio_norm;
