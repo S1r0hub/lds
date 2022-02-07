@@ -21,16 +21,14 @@ import org.openrdf.model.URI;
  * @author Fouad Komeiha
  */
 public class LdManagerBase implements LdManager{
-    
+
     protected LdDataset dataset;
     protected String baseClassPath = "lds.LdManager.LdManagerBase.";
-
 
     public  LdManagerBase(LdDataset dataset) {
         this.dataset = dataset;
     }
-    
-    
+
     @Override
     public List<String> getSubjects(R a) {
 
@@ -56,7 +54,6 @@ public class LdManagerBase implements LdManager{
             String property = Ontology.compressValue(qs.getResource("property"));
             commonSubjects.add(resource+"|"+property);
         }
-        // dataset.close();
 
         if(!commonSubjects.isEmpty()) { return commonSubjects; }
         return null;
@@ -81,15 +78,14 @@ public class LdManagerBase implements LdManager{
             sameAsresources.add(resource);
         }
 
-        if(! sameAsresources.isEmpty())
-            return sameAsresources;
-        else
-            return null;
+        if(!sameAsresources.isEmpty()) { return sameAsresources; } 
+        return null;
     }
     
     
     @Override
     public int countPropertyOccurrence(URI link){
+
         int count = 0;
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -97,14 +93,10 @@ public class LdManagerBase implements LdManager{
 
         ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
-
         if (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
             count = qs.getLiteral("count").getInt();
-            // dataset.close();
             return count;
-//            return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
-
         }
 
         return 0;
@@ -133,10 +125,8 @@ public class LdManagerBase implements LdManager{
             commonObjects.add(resource+"|"+property1+"|"+property2);
         }
 
-        if(! commonObjects.isEmpty())
-            return commonObjects;
-        else
-            return null;
+        if(!commonObjects.isEmpty()) { return commonObjects; } 
+        return null;
     }
     
     @Override
@@ -151,8 +141,6 @@ public class LdManagerBase implements LdManager{
                                                                            + "[] ?property2 ?object. "
                                                                            + "filter( isuri(?object))}");
         ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
-        
-        
 
         while (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
@@ -162,12 +150,10 @@ public class LdManagerBase implements LdManager{
             commonObjects.add(resource+"|"+property1+"|"+property2);
         }
 
-        if(! commonObjects.isEmpty())
-            return commonObjects;
-        else
-            return null;
+        if(!commonObjects.isEmpty()) { return commonObjects; }
+        return null;
     }
-    
+
     @Override
     public List<String> getCommonSubjects(R a , R b){
 
@@ -189,10 +175,8 @@ public class LdManagerBase implements LdManager{
             commonSubjects.add(resource+"|"+property1+"|"+property2);
         }
 
-        if(! commonSubjects.isEmpty())
-            return commonSubjects;
-        else
-            return null;
+        if(!commonSubjects.isEmpty()) { return commonSubjects; }
+        return null;
     }
     
     @Override
@@ -216,10 +200,8 @@ public class LdManagerBase implements LdManager{
             commonSubjects.add(resource+"|"+property1+"|"+property2);
         }
 
-        if(! commonSubjects.isEmpty())
-            return commonSubjects;
-        else
-            return null;
+        if(!commonSubjects.isEmpty()) { return commonSubjects; }
+        return null;
     }
     
     @Override
@@ -261,8 +243,6 @@ public class LdManagerBase implements LdManager{
             edges.add(edge);
         }
 
-      // dataset.close();
-
       if(!edges.isEmpty()) { return edges; }
       return null;
     }
@@ -270,10 +250,10 @@ public class LdManagerBase implements LdManager{
     
     @Override
     public List<String> getObjects(R a){
+
         List<String> objects =  new ArrayList<>();
         
         String object , property;
-
 
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -288,10 +268,9 @@ public class LdManagerBase implements LdManager{
             object = Ontology.compressValue(qs.getResource("object"));
             property = Ontology.compressValue(qs.getResource("property"));
             objects.add(object+"|"+property);
-            // dataset.close();
         }
 
-        if(! objects.isEmpty()) { return objects; }
+        if(!objects.isEmpty()) { return objects; }
         return null;
     }
     
@@ -310,16 +289,15 @@ public class LdManagerBase implements LdManager{
         if (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
                 count = qs.getLiteral("count").getInt();
-                // dataset.close();
                 return count;
         }
 
-        // dataset.close();
         return 0;
     }
-    
+
     @Override
     public int countShareCommonSubjects(URI link , R a){
+
         int count = 0;
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -333,18 +311,17 @@ public class LdManagerBase implements LdManager{
         if (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
                 count = qs.getLiteral("count").getInt();
-                // dataset.close();
                 return count;
         }
 
-            // dataset.close();
-            return 0;
+        return 0;
     }
     
     
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
     public  int countResource() {
+
         int count = 0;
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -361,37 +338,10 @@ public class LdManagerBase implements LdManager{
         if (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
                 count = qs.getLiteral("count").getInt();
-                // dataset.close();
                 return count;
         }
-        
 
-        // dataset.close();
         return 0;
     }
 
-//    @Override
-//    public int countSubject(URI link, R a) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//
-//    @Override
-//    public int countSubject(R a) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//
-//    @Override
-//    public int countObject(URI link, R a) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//
-//    @Override
-//    public int countObject(R a) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//
-//    @Override
-//    public List<URI> getEdges(R a, R b) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
 }
