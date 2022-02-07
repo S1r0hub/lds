@@ -201,15 +201,13 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     public int countObject(URI l,  R a) {
 
         List<String> objects_a = getObjects(a);
+        if(objects_a == null) { return 0; }
+        
         int count = 0;
-        
-        if(objects_a == null)
-            return count;
-        
         for(String objects: objects_a){
             String string[] =  objects.split("\\|");
-            if(string[1].equals(Ontology.compressValue(l)))
-                count++;
+            if (string.length < 2) { continue; } // prevent index out of bounds
+            if (string[1].equals(Ontology.compressValue(l))) { count++; }
         }
         
         return count;
@@ -223,10 +221,10 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
         List<String> subjects = new ArrayList<>();
         
         for(String item: list){
-            String string[] =  item.split("\\|");
+            String string[] = item.split("\\|");
             String subject = string[0];
 
-            if(subjects.isEmpty() || ! subjects.contains(subject) )
+            if(subjects.isEmpty() || !subjects.contains(subject) )
                 subjects.add(subject);
         }
         
@@ -247,8 +245,8 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
         int count = 0;
         for(String subjects: subjects_a){
             if (subjects.equals("-1")) { continue; } // skip to deal with "-1" entries from indexing
-            String string[] =  subjects.split("\\|" , 2);
-            if(string[1].equals(uri)) { count++; }
+            String string[] = subjects.split("\\|", 2);
+            if (string[1].equals(uri)) { count++; }
         }
         
         return count;
