@@ -5,7 +5,6 @@
  */
 package lds.LdManager;
 
-import java.util.ArrayList;
 import java.util.List;
 import lds.LdManager.ontologies.Ontology;
 import lds.indexing.LdIndex;
@@ -24,7 +23,7 @@ public class ResimLdManager extends DistanceMeasuresLdManager{
   
     private LdIndex sameAsIndex;
     private LdIndex propertyOccurrenceIndex;
-    private LdIndex objectsIndex;
+    //private LdIndex objectsIndex;
     private LdIndex countShareCommonSubjectsIndex;
     private LdIndexerManager manager;
     
@@ -32,7 +31,6 @@ public class ResimLdManager extends DistanceMeasuresLdManager{
     public ResimLdManager (LdDataset dataset , boolean useIndex) throws Exception {                
             super(dataset , useIndex);
             this.useIndex = useIndex; 
-
     }
 
 
@@ -53,7 +51,6 @@ public class ResimLdManager extends DistanceMeasuresLdManager{
         
         String countShareCommonSubjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/countShareCommonSubjects_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         countShareCommonSubjectsIndex = manager.loadIndex(countShareCommonSubjectsIndexFile);
-        
     }
 
 
@@ -66,7 +63,6 @@ public class ResimLdManager extends DistanceMeasuresLdManager{
             manager.closeIndex(propertyOccurrenceIndex);
             manager.closeIndex(countShareCommonSubjectsIndex);
         }
-
     }
  
     @Override
@@ -86,7 +82,6 @@ public class ResimLdManager extends DistanceMeasuresLdManager{
         }
         
         return super.countPropertyOccurrence(link);
-    
     }
     
     
@@ -123,11 +118,11 @@ public class ResimLdManager extends DistanceMeasuresLdManager{
             
             if(property1.equals(Ontology.compressValue(li)) && property2.equals(Ontology.compressValue(lj)))
                 count++;
-        }           
-    
+        }
+
         return count;
     }
-    
+
     public int countTyplessCommonObjects(URI li, URI lj , R a){
         int count = 0;
         List<String> commonObjects = getCommonObjects(a);
@@ -150,7 +145,5 @@ public class ResimLdManager extends DistanceMeasuresLdManager{
         return count;
 //          return distinctCommonObjects.size();
     }
-    
-}
 
-    
+}
