@@ -142,7 +142,6 @@ public abstract class ResourceSimilarity implements LdSimilarity {
 		this.edges = resimLDLoader.getEdges(a, b);
 		if (edges == null) { return 0; }
 
-		System.out.println("Get similarity of a=" + a.toString() + " and b=" + b.toString());
 		double x = w1 * PropertySim(a, b);
 		double y = w2 * LDSDsim(a, b);
 		return (x + y) / (w1 + w2);
