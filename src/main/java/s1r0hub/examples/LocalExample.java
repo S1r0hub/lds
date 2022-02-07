@@ -22,7 +22,10 @@ public class LocalExample {
 	// can take a while and issue many requests if true
 	private static final boolean COMPUTE_PICSS = true; 
 	
-	
+	// !! BEFORE RUNNING !!
+	// 1. Make sure you use the correct endpoint and that the service is running.
+	// 2. Update the value of resourceCount (see below), based on your dataset.
+	// 3. For large datasets, consider to disable COMPUTE_PICSS (see above).
 	public static void main(String[] args) {
 		
 		String endpoint = "http://localhost:9999/blazegraph/sparql";
