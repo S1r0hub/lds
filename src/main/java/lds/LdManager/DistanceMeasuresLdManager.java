@@ -312,32 +312,32 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     }
     
     public int countCommonObjects(URI link, R a , R b){
+
         int count = 0;
-        List<String> commonObjects = getCommonObjects(a , b);        
+        List<String> commonObjects = getCommonObjects(a , b);
+        if (commonObjects == null || commonObjects.contains("-1")) { return count; }
         String l = Ontology.compressValue(link);
-        
-        if(commonObjects == null || commonObjects.contains("-1"))
-            return count;
-                
-        for(String items:commonObjects){
+
+        for(String items : commonObjects){
             String string[] =  items.split("\\|");
             String property1 = string[1];
             String property2 = string[2];
             
             if(property1.equals(l) && property2.equals(l))
                 count++;
-        }           
-    
+        }
+
         return count;
     }
     
     public int countShareCommonObjects(URI l, R a, R b) {
+
         int count = 0;
         List<String> commonObjects = getCommonObjects(a , b);
-        String link = Ontology.compressValue(l);
-        
         if(commonObjects == null || commonObjects.contains("-1"))
             return count;
+        
+        String link = Ontology.compressValue(l);
         
         for(String items:commonObjects){
             String string[] =  items.split("\\|");
@@ -346,16 +346,16 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
             
             if(property1.equals(link) && property2.equals(link))
                 count++;
-        }           
+        }
     
         return count;
     }
     
-    public int countTyplessCommonObjects(URI li, URI lj, R a , R b){
+    public int countTyplessCommonObjects(URI li, URI lj, R a , R b) {
+
         int count = 0;
         List<String> commonObjects = getCommonObjects(a , b);
-        
-         if(commonObjects == null || commonObjects.contains("-1"))
+        if(commonObjects == null || commonObjects.contains("-1"))
             return count;
         
         for(String items:commonObjects){
@@ -365,18 +365,19 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
             
             if(property1.equals(Ontology.compressValue(li)) && property2.equals(Ontology.compressValue(lj)))
                 count++;
-        }           
+        }
     
         return count;
     }
-    
+
     public int countShareCommonSubjects(URI l, R a, R b) {
+
         int count = 0;
         List<String> commonSubjects = getCommonSubjects(a , b);
-        String link = Ontology.compressValue(l);
         if(commonSubjects == null || commonSubjects.contains("-1"))
             return count;
         
+        String link = Ontology.compressValue(l);
         for(String items:commonSubjects){
             String string[] =  items.split("\\|");
             String property1 = string[1];
@@ -384,15 +385,15 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
             
             if(property1.equals(link) && property2.equals(link))
                 count++;
-        }           
-    
+        }
+
         return count;
     }
     
     public int countTyplessCommonSubjects(URI li, URI lj , R a , R b){
+
         int count = 0;
         List<String> commonSubjects = getCommonSubjects(a , b);
-        
         if(commonSubjects ==  null || commonSubjects.contains("-1"))
             return count;
         
@@ -403,21 +404,20 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
             
             if(property1.equals(Ontology.compressValue(li)) && property2.equals(Ontology.compressValue(lj)))
                 count++;
-        }           
-    
+        }
+
         return count;
     }
 
     
-    public int countCommonSubjects(URI link, R a , R b){
+    public int countCommonSubjects(URI link, R a , R b) {
+
         int count = 0;
         List<String> commonSubjects = getCommonSubjects(a , b);
-        String l = Ontology.compressValue(link);
-        
         if(commonSubjects == null || commonSubjects.contains("-1"))
             return count;
-        
-        
+
+        String l = Ontology.compressValue(link);
         for(String items:commonSubjects){
             String string[] =  items.split("\\|");
             String property1 = string[1];
@@ -425,10 +425,9 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
             
             if(property1.equals(l) && property2.equals(l))
                 count++;
-        }           
+        }
     
         return count;
     }
-    
-    
+
 }
