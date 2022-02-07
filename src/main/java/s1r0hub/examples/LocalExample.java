@@ -39,8 +39,11 @@ public class LocalExample {
 		conf_piccs.addParam(ConfigParam.LdDatasetMain, dataset);
 		
 		// For PICSS: set number of resources in the dataset as described in PICSS paper from 2016
-		// (based on subjects that are of type owl:Thing) 
-		int resourceCount = 10182; // based on owl:Class
+		// Here, it is based on "owl:Class", as each resource is connected to it per "rdf:type".
+		// You can get this value by issuing this query:
+		//   PREFIX owl: <http://www.w3.org/2002/07/owl#>
+		//   SELECT (COUNT(?s) as ?resourceCount) WHERE { ?s a owl:Class }
+		int resourceCount = 10182;
 		conf_piccs.addParam(ConfigParam.resourcesCount, resourceCount);
 		System.out.println("PICSS using resource count: " + resourceCount);
 		
