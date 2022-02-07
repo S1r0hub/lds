@@ -252,14 +252,12 @@ public class LdManagerBase implements LdManager{
     public List<String> getObjects(R a){
 
         List<String> objects =  new ArrayList<>();
-        
-        String object , property;
+        String object, property;
 
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
         query_cmd.setCommandText("select distinct ?object ?property " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {<" + a.getUri() + "> ?property ?object ."
                 + " filter(isuri(?object)) }");
-
 
         ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 

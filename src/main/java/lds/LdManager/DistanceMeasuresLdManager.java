@@ -144,7 +144,7 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
             return countShareCommonObjectsIndex.getIntegerFromIndex(dataset , Utility.createKey(a , link), baseClassPath + "countShareCommonObjects" , link , a);
         }
         
-        return super.countShareCommonObjects(link, a);        
+        return super.countShareCommonObjects(link, a);
     }
     
     
@@ -171,12 +171,14 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
         return edges;
     }
     
+    /**
+     * Number of distinct objects that resource a links to (i.e. a --l--> o).
+     * @param a subject resource
+     */
     public int countObject(R a) {
 
         List<String> list = getObjects(a);
-        
-        if(list == null)
-            return 0;
+        if(list == null) { return 0; }
         
         List<String> objects = new ArrayList<>();
         
@@ -189,12 +191,11 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
         }
         
         return objects.size();
-
     }
 
     /**
      * Count how many resources are connected to <code>a</code> by link <code>l</code>.<br/>
-     * Effectively, this returns the objects of triples having <code>a</code> as subject.
+     * Effectively, this returns the (amount of) objects of triples having <code>a</code> as subject.
      * @param l the link (URI)
      * @param a the subject resource
      */
@@ -213,6 +214,10 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
         return count;
     }
     
+    /**
+     * Number of distinct subjects that link to resource a (i.e. s --l--> a).
+     * @param a object resource
+     */
     public int countSubject(R a) {
     
         List<String> list = getSubjects(a);
