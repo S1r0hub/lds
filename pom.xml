@@ -43,11 +43,12 @@
 	<description>A Java library for Linked Open Data based semantic similarity measures.</description>
 	<url>https://github.com/FouadKom/lds/blob/master/doc/General_Explanation_of_the_Library.md</url>
 
-	<profiles></profiles>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jenaVersion>3.7.0</jenaVersion>
+		
+		<!-- Following is set by profile (just leave as it is) -->
+		<exclude.examples.path>EXAMPLESTOEXCLUDE</exclude.examples.path>
 	</properties>
 
 	<licenses>
@@ -205,11 +206,29 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
-					<!--
+					<!-- Exclude examples if "env" is set to "prod". -->
 					<excludes>
-						<exclude>**/path/*.*</exclude>
+						<exclude>${exclude.examples.path}</exclude>
 					</excludes>
-					-->
+				</configuration>
+			</plugin>
+			<!-- Added additionally to generate sources.jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.2.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<excludes>
+						<exclude>${exclude.examples.path}</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 			<!-- Added additionally to generate javadocs.jar -->
@@ -225,21 +244,30 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<!-- Added additionally to generate sources.jar -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>3.2.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
+				<configuration>
+					<sourceFileExcludes>
+						<sourceFileExclude>${exclude.examples.path}</sourceFileExclude>
+					</sourceFileExcludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+	
+	<!-- Build Profiles -->
+	<profiles>
+		<profile>
+			<id>release-profile</id>
+			<activation>
+				<!-- Build version without examples by adding "-Denv=prod" to Maven commands. -->
+				<property>
+					<name>env</name>
+					<value>prod</value>
+				</property>
+			</activation>
+			<!-- Overwrite according property. -->
+			<properties>
+				<exclude.examples.path>**/s1r0hub/examples/*.*</exclude.examples.path>
+			</properties>
+		</profile>
+	</profiles>
 </project>
