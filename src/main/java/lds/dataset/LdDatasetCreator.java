@@ -120,9 +120,9 @@ public class LdDatasetCreator {
     }
 
     /**
-     * Create local {@link LdDataset} instance.
-     * Uses "<code>http://graph/dataset</code>" as default graph name.
-     * This is probably unusual so we consider it a bug. (author: S1r0hub)
+     * Create local {@link LdDataset} instance.<br/>
+     * Previously used {@code http://graph/dataset} as default graph name.<br/>
+     * Changed it to have no graph name (null) if it was not explicitly given. (author: S1r0hub)
      * @param dataSetDir path to dataset
      * @param name dataset name
      */
@@ -133,7 +133,8 @@ public class LdDatasetCreator {
             dataset = LdDatasetFactory.getInstance()
                         .name(name)
                         .file(dataSetDir)
-                        .defaultGraph("http://graph/dataset")
+                        //.defaultGraph("http://graph/dataset") // unusual - removed it
+                        .defaultGraph(null)
                         .create();
 
         } catch (Exception e) {
