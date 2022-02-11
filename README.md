@@ -1,4 +1,12 @@
 # lds
+
+
+***IMPORTANT NOTE***  
+This is a modified version of the original lds-library.  
+It includes some bug fixes, few code changes and cleanups.  
+Have a look at the start of the POM.xml file or the commit messages for more detailed information.  
+
+
 **LDS** (Linked Data Similarity) is a JAVA Library for the calculaton of **LOD** based semantic similarity. **LDS** implements similarity measures such as:
 
 * *LDSD:* Linked Data Semantic Distance [1], and its extensions:
@@ -14,6 +22,7 @@
 * *LODS:* Linked Open Data Similarity (SimI and SimP submeasures only) [4]
 
 * *PICSS:* Partitioned Information Content Semantic Similarity [5]
+
 
 ## Tutorials
 * [General explanation of the library](./doc/General_Explanation_of_the_Library.md)
@@ -64,6 +73,15 @@ mvn test -Dtest=lds.measures.LODS.SimP_Test
 ```
 mvn test -Dtest=lds.measures.picss.PICSSTest
 ```
+
+### Test measures on local data
+
+If you want to test the measures only on local data instead of an endpoint:
+```
+mvn test *LDSDTest_localRDF,*ResimTest_localRdf,*PICSSTest_localRdf
+```
+
+This will run the local test for LDSD, Resim and PICSS.  
 
 
 ## Built With
