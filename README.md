@@ -78,7 +78,7 @@ mvn test -Dtest=lds.measures.picss.PICSSTest
 
 If you want to test the measures only on local data instead of an endpoint:
 ```
-mvn test *LDSDTest_localRDF,*ResimTest_localRdf,*PICSSTest_localRdf
+mvn test -Dtest=*LDSDTest_localRDF,*ResimTest_localRdf,*PICSSTest_localRdf
 ```
 
 This will run the local test for LDSD, Resim and PICSS.  
