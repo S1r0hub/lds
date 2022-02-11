@@ -43,9 +43,5 @@ public class measureTest_localRDF {
         
         picss.closeIndexes();
         epics.closeIndexes();
-        
-        
-        
     }
-    
 }

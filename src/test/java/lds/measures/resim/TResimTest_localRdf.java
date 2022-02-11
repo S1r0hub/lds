@@ -20,8 +20,8 @@ import ldq.LdDatasetFactory;
  * @author Fouad Komeiha
  */
 public class TResimTest_localRdf {
-    
-    	public static final String dataSetDir = System.getProperty("user.dir") + "/src/test/resources/data.rdf";
+
+	public static final String dataSetDir = System.getProperty("user.dir") + "/src/test/resources/data.rdf";
 	public static ResimLdManager tresimLdManager;
 
 	@Test
@@ -33,58 +33,56 @@ public class TResimTest_localRdf {
 		R r2 = new R("http://www.example.org#Whale");
 
 		try {
-			dataSet = LdDatasetFactory.getInstance().name("example").file(dataSetDir)
-				.defaultGraph("http://graphResim/dataset").create();
-
+			//dataSet = LdDatasetFactory.getInstance().name("example").file(dataSetDir)
+			//	.defaultGraph("http://graphResim/dataset").create();
+			// FIX by S1r0hub: the default graph name does not exist in the data
+			dataSet = LdDatasetFactory.getInstance().name("example")
+				.file(dataSetDir).defaultGraph(null).create();
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
 
 		Config config = new Config();
-                config.addParam(ConfigParam.useIndexes, false);
-                config.addParam(ConfigParam.LdDatasetMain , dataSet);
+		config.addParam(ConfigParam.useIndexes, false);
+		config.addParam(ConfigParam.LdDatasetMain , dataSet);
 
 		ResourceSimilarity tresim = new TResim(config);
-                
-                double cii = 0, cio = 0, cii_k = 0 , cio_k = 0 , cii_norm = 0, cio_norm = 0, pptySim,
-				ldsdsim, sim , cd_r1 =0 , cd_r2 = 0 , cd_norm_r1 = 0 , cd_norm_r2 = 0;
-                
-		/*Set<URI> edges = tresimLdManager.getEdges(r1, r2);
+		
+		
+//		double cii = 0, cio = 0, cii_k = 0 , cio_k = 0 , cii_norm = 0, cio_norm = 0, cd_r1 =0 , cd_r2 = 0 , cd_norm_r1 = 0 , cd_norm_r2 = 0;
+//		
+//		Set<URI> edges = tresimLdManager.getEdges(r1, r2);
+//
+//		for (URI firstEdge : edges) {
+//					
+//			for(URI secondEdge : edges){
+//				
+//				cii = cii + tresim.Cii(firstEdge , secondEdge , r1, r2);
+//				cio = cio + tresim.Cio(firstEdge, secondEdge , r1, r2);
+//				cio_norm = cio_norm + tresim.Cio_normalized(firstEdge, secondEdge , r1, r2);
+//				cii_norm = cii_norm + tresim.Cii_normalized(firstEdge, secondEdge , r1, r2);
+//
+//			}
+//
+//			cd_r1 = cd_r1 + tresim.Cd(firstEdge , r1 , r2);
+//			cd_norm_r1 = cd_norm_r1 + tresim.Cd_normalized(firstEdge, r1, r2);
+//			cd_r2 = cd_r2 + tresim.Cd(firstEdge , r2 , r1);
+//			cd_norm_r2 = cd_norm_r2 + tresim.Cd_normalized(firstEdge, r2, r1);
+//		}
+//
+//		// components of LDSD in Resim
+//		assertEquals(1.0 , cd_r1 , 0.0);
+//		assertEquals(1.0 , cd_r2 , 0.0);
+//		assertEquals(0.7686217868402407 , cd_norm_r2 , 0.0);
+//		assertEquals(0.7686217868402407 , cd_norm_r2 , 0.0);
+//		assertEquals(0.0, cii, 0.0);
+//		assertEquals(1.0, cio, 0.0);
+//		assertEquals(0.0, cii_norm, 0.0);
+//		assertEquals(1.0, cio_norm, 0.0);
 
 		
-
-		for (URI firstEdge : edges) {
-                    
-                    for(URI secondEdge : edges){
-			cii = cii + tresim.Cii(firstEdge , secondEdge , r1, r2);
-
-			cio = cio + tresim.Cio(firstEdge, secondEdge , r1, r2);
-
-			cio_norm = cio_norm + tresim.Cio_normalized(firstEdge, secondEdge , r1, r2);
-
-			cii_norm = cii_norm + tresim.Cii_normalized(firstEdge, secondEdge , r1, r2);
-
-                    }
-                    
-                    cd_r1 = cd_r1 + tresim.Cd(firstEdge , r1 , r2);
-                    cd_norm_r1 = cd_norm_r1 + tresim.Cd_normalized(firstEdge, r1, r2);
-                    cd_r2 = cd_r2 + tresim.Cd(firstEdge , r2 , r1);                   
-                    cd_norm_r2 = cd_norm_r2 + tresim.Cd_normalized(firstEdge, r2, r1);
-
-		} 
-               
-
-		// components of LDSD in Resim
-                assertEquals(1.0 , cd_r1 , 0.0);
-                assertEquals(1.0 , cd_r2 , 0.0);
-                assertEquals(0.7686217868402407 , cd_norm_r2 , 0.0);
-                assertEquals(0.7686217868402407 , cd_norm_r2 , 0.0);
-		assertEquals(0.0, cii, 0.0);
-		assertEquals(1.0, cio, 0.0);
-		assertEquals(0.0, cii_norm, 0.0);
-		assertEquals(1.0, cio_norm, 0.0);*/
-                
-                tresim.loadIndexes();
+		tresim.loadIndexes();
+		double sim, pptySim, ldsdsim;
 
 		sim = tresim.compare(r1, r2);
 		assertEquals(0.41698033075235674, sim, 0.0);
@@ -93,7 +91,7 @@ public class TResimTest_localRdf {
 		assertEquals(0.11666666666666665, pptySim, 0.0);
 
 		ldsdsim = tresim.LDSDsim(r1, r2);
-                assertEquals(0.7172939948380468, ldsdsim, 0.0);
+		assertEquals(0.7172939948380468, ldsdsim, 0.0);
 
 		sim = tresim.compare(r2, r1);
 		assertEquals(0.41698033075235674, sim, 0.0);
@@ -102,7 +100,5 @@ public class TResimTest_localRdf {
 		assertEquals(1.0, sim, 0.0);
 
 		tresim.closeIndexes();
-
 	}
-    
 }

@@ -5,19 +5,11 @@
  */
 package ldq;
 
-import java.io.File;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFormatter;
-import org.apache.jena.shared.PrefixMapping;
-import org.apache.jena.shared.impl.PrefixMappingImpl;
-import static org.junit.Assert.fail;
 import org.junit.Test;
 
-/**
- *
- * @author LENOVO
- */
 public class HDTTest {
     
     @Test
@@ -67,8 +59,5 @@ public class HDTTest {
 //        ResultSet resultSet = dataSet.executeSelectQuery(query_cmd.toString());
 //        System.out.println(ResultSetFormatter.asText(resultSet)); 
 
-      
-      
     }
-
 }

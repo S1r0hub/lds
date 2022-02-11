@@ -13,9 +13,7 @@ import lds.dataset.LdDatasetCreator;
 import lds.measures.lods.ontologies.*;
 import ldq.LdDataset;
 import lds.measures.lods.SimC;
-import lds.resource.LdResourceFactory;
 import lds.resource.R;
-import org.junit.Test;
 
 
 /**

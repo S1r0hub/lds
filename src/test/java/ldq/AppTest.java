@@ -6,9 +6,7 @@
 package ldq;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
@@ -40,7 +38,6 @@ public class AppTest extends TestCase {
 	public AppTest(String testName) {
 		super(testName);
 		BasicConfigurator.configure();
-		
 	}
 
 	/**
@@ -55,7 +52,6 @@ public class AppTest extends TestCase {
 	 */
 	public void testApp() {
 		assertTrue(true);
-		
 	}
 
 	public void testCreateAndQueryDBpediaFrDataset() {
@@ -81,7 +77,7 @@ public class AppTest extends TestCase {
 		  
 		ParameterizedSparqlString query_cmd = fr_DBpedia_dataset.prepareQuery();
 
-		String match_label = "Château de Cheverny";
+		String match_label = "Chï¿½teau de Cheverny";
 
 		query_cmd.setCommandText("select ?resource where {" 
 		   + "?resource <"+ RDFS.label + "> ?label. " + "}");

@@ -13,7 +13,6 @@ import lds.dataset.LdDatasetCreator;
 import lds.measures.lods.ontologies.*;
 import ldq.LdDataset;
 import lds.measures.lods.SimI;
-import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.junit.Test;
 
@@ -22,8 +21,6 @@ import org.junit.Test;
  * @author Fouad Komeiha
  */
 public class SimI_Test {
-    
-    
     
     @Test
     public void SimI_Test() throws Exception{
@@ -64,9 +61,4 @@ public class SimI_Test {
 
         simi.closeIndexes();
     }
-
-
-    
-    
-    
 }

@@ -43,5 +43,4 @@ public class SimP_Test {
         //ends calculation for the chosen similaarity and closes all indexes if created
         engine.close();
     }
-    
 }
