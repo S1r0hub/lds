@@ -37,7 +37,8 @@ public class Utility {
                 }
                 
                 Class<?> cls = Class.forName(classPath);
-                Object _instance = cls.newInstance();
+                //Object _instance = cls.newInstance(); // S1r0hub: replaced because deprecated
+                Object _instance = cls.getConstructor().newInstance(); // replacement
                 Method method = cls.getDeclaredMethod(methodName, params);
                 method.invoke(_instance , args);
             }

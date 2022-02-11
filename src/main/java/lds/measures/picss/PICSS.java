@@ -71,33 +71,25 @@ public class PICSS implements LdSimilarity {
     private double PICSS(R a, R b) {
 
         List<String> features_a = ldManager.getFeatures(a);
-        System.out.println("[TMP] PICSS get features_a");
         List<String> features_b = ldManager.getFeatures(b);
-        System.out.println("[TMP] PICSS get features_b");
 
-        if (features_a.isEmpty() && features_b.isEmpty())
-            return 0;
+        if (features_a.isEmpty() && features_b.isEmpty()) { return 0; }
 
         List<String> common_features = Feature.commonFeatures(features_a, features_b);
+        if (common_features == null || common_features.isEmpty()) { return 0; }
 
-        if (common_features == null || common_features.isEmpty())
-            return 0;
-        
         features_a.removeAll(common_features);
         features_b.removeAll(common_features);
 
         List<String> unique_features_a = Feature.uniqueFeatures(features_a, features_b);
         List<String> unique_features_b = Feature.uniqueFeatures(features_b, features_a);
 
-        System.out.println("[TMP] PICSS computing common features: " + common_features.size());
-        double x = PIC(common_features);
-        System.out.println("[TMP] PICSS computing unique features a: " + unique_features_a.size());
-        double y = PIC(unique_features_a);
-        System.out.println("[TMP] PICSS computing unique features b: " + unique_features_b.size());
-        double z = PIC(unique_features_b);
+        // unique features can be a lot, causing lots of sparql queries!
+        double x = PIC(common_features);   // PIC(Fa intersection Fb)
+        double y = PIC(unique_features_a); // PIC(Fa - Fb)
+        double z = PIC(unique_features_b); // PIC(Fb - Fa)
 
-        if ((x + y + z) == 0)
-            return 0;
+        if ((x + y + z) == 0) { return 0; }
 
         double sim = (x / (x + y + z)) < 0 ? 0 : (x / (x + y + z));
         return sim;

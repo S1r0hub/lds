@@ -24,7 +24,9 @@ public class PICSSTest_localRdf {
 	@Test
 	public void isPICSSWorksCorrectlyOnPaperExample() throws Exception {
 
-		LdDataset dataSet = LdDatasetCreator.getLocalDataset(dataSetDir, "example");
+		// S1r0hub: FIXED by adding null as default graph name
+		// If test still fails, try to remove the "Indexes" folder and retry.
+		LdDataset dataSet = LdDatasetCreator.getLocalDataset(dataSetDir, null, "example");
 
 		R r1 = new R("http://www.example.org#Fish");
 		R r2 = new R("http://www.example.org#Whale");
