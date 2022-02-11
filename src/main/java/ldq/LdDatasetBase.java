@@ -40,18 +40,14 @@ public abstract class LdDatasetBase implements LdDataset {
 
 	/** dataset configuration Model. */
 	Model config;
-	
+
 	/** default graph */
 	String defaultGraph;
-	
-	
-	
+
 	QueryExecution queryExecution;
 
 
-	
 	public LdDatasetBase() {
-	
 	}
 
 	/*
@@ -63,25 +59,17 @@ public abstract class LdDatasetBase implements LdDataset {
 		return name;
 	}
 
-	
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
+
 	public void setDefaultGraph(String g) {
 		this.defaultGraph = g;
 	}
-	
-	
+
 	public String getDefaultGraph() {
 		return this.defaultGraph;
 	}
-	
-	
-	
-	
-	
 
 	/*
 	 * (non-Javadoc)
@@ -231,5 +219,4 @@ public abstract class LdDatasetBase implements LdDataset {
 	private void initQueryExecution(String query) {
 		queryExecution = QueryExecutionFactory.create(query);
 	}
-
 }

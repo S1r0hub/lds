@@ -15,18 +15,15 @@ import org.apache.jena.rdf.model.Model;
 public class RemoteSparqlLdDataset extends LdDatasetBase implements LdDataset {
 
 	public RemoteSparqlLdDataset() {
-
 	}
 
 	public ResultSet executeSelectQuery(String query) {
 		initQueryExecution(query);
 		return QueryExecutionFactory.sparqlService(this.link, query).execSelect();
-
 	}
 
 	private void initQueryExecution(String query) {
 		queryExecution = QueryExecutionFactory.create(query);
-
 	}
 
 	public boolean executeAskQuery(String query) {
@@ -45,22 +42,14 @@ public class RemoteSparqlLdDataset extends LdDatasetBase implements LdDataset {
 	}
 
 	public void close() {
+		// FIX by S1r0hub: if results were only taken from index, queryExecution wont
+		// be initialized and therefore, calling this method caused a NullPointerException.
+		if (queryExecution == null) { return; }
 		queryExecution.close();
-
 	}
-
-	// if (this.config.dataset_type == LdDatasetType.REMOTE_SPARQL_ENDPOINT)
-	// else {
-	// if (model == null) {
-	// FileManager.get().addLocatorClassLoader(SparqlLdDataset.class.getClassLoader());
-	// model = FileManager.get().loadModel(this.config.dataset_location);
-	// }
-	// return QueryExecutionFactory.create(query, model).execSelect();
-	// }
 
 	// TODO
 	// if type is dump file and it does not exists locally download it
 	// if url of file available in config file
 	// store data locally / cache
-
 }

@@ -31,6 +31,7 @@
 	- Fixed: LdManagerBase.java:getSubjects(R a) not checking for "blank node" subjects => library crash
 	- Fixed: HybridMeasuresLdManagerBase.java:getIngoingFeatures(R a) not checking for "blank node" subjects => library crash
 	- Fixed: DistanceMeasuresLdManager.java:countSubject(URI l, R a) does not check if the list contains "-1", which was set previously on indexing, causing index out of bounds => library crash
+	- Fixed: RemoteSparqlLdDataset.java:close() throws NullPointerException if result were taken from index only
 	- Updated Resim Constructor to use just a single one (improved maintainability)
 	- BUGS:
 		- hard coded default graph is unusual and causes problems, see: LdDatasetCreator.getLocalDataset()
