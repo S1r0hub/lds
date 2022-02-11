@@ -15,13 +15,11 @@ import lds.config.ConfigParam;
 import lds.dataset.DBpediaChapter;
 import lds.dataset.LdDatasetCreator;
 import test.utility.Util;
-import lds.measures.resim.Resim;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import ldq.LdDataset;
-import slib.utils.i.Conf;
 import test.utility.Util.SplitedList;
 
 /**
@@ -95,11 +93,9 @@ public class ResimTest_Dbpedia_valueEquality_Test {
 
         }
         
-        resim.closeIndexes();      
-        
-       
+        resim.closeIndexes();
     }
-    
+
 
     @Test
     public void isResimWorksCorrectlyOnPaperExample() throws FileNotFoundException, Exception {    
@@ -112,7 +108,6 @@ public class ResimTest_Dbpedia_valueEquality_Test {
           while(startPairNumbers <= endPairNumbers){
               Resim_valueEquality_Test(startPairNumbers);
               startPairNumbers = startPairNumbers + incrementBy;
-          }  
-    
+          }
     }
 }

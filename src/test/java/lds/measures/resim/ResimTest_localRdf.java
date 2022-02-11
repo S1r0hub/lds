@@ -29,8 +29,8 @@ public class ResimTest_localRdf {
 				//.defaultGraph("http://graphResim/dataset")
 				.defaultGraph(null) // FIXED
 				.create();
-
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			fail(e.getMessage());
 		}
 
