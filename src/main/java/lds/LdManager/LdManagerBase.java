@@ -176,7 +176,6 @@ public class LdManagerBase implements LdManager{
             QuerySolution qs = resultSet.nextSolution();
             // Skip bnodes as they always have different identifier (S1r0hub)
             // TODO: Is it ok to skip anonymous nodes? If not change this.
-            System.out.println(qs.getResource("subject"));
             if (qs.getResource("subject").isAnon()) { continue; }
             String resource = Ontology.compressValue(qs.getResource("subject"));
             String property1 = Ontology.compressValue(qs.getResource("property1"));
