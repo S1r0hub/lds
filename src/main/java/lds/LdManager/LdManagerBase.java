@@ -161,14 +161,20 @@ public class LdManagerBase implements LdManager{
         
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-        query_cmd.setCommandText("select distinct ?subject  ?property1  ?property2 " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") 
-                                                                           + " where {?subject ?property1 <" + a.getUri() + ">. "
-                                                                           + " ?subject ?property2 <" + b.getUri() + "> }");
+        String defaultGraph = "";
+        if (dataset.getDefaultGraph() != null && !dataset.getDefaultGraph().isEmpty()) {
+            defaultGraph = "from <" + dataset.getDefaultGraph()+ ">";
+        }
+
+        query_cmd.setCommandText("select distinct ?subject ?property1 ?property2 " + defaultGraph
+                               + " where {?subject ?property1 <" + a.getUri() + ">. "
+                               + " ?subject ?property2 <" + b.getUri() + "> }");
 
         ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
         while (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
+            if (qs.getResource("subject").isAnon()) { continue; } // skip bnodes (S1r0hub)
             String resource = Ontology.compressValue(qs.getResource("subject"));
             String property1 = Ontology.compressValue(qs.getResource("property1"));
             String property2 = Ontology.compressValue(qs.getResource("property2"));
